@@ -25,11 +25,11 @@ In emergency neurology, *"time is brain."* For acute ischemic stroke, over **2 m
 
 A full-diagnostic multi-coil brain MRI scan exceeds 200–500 MB. To meet acute stroke deadlines (<105 s total triage), tele-radiology systems apply aggressive in-transit subsampling ($R = 4\times, 6\times, 8\times$), slashing payload by **75% to 87.5%**. Missing spatial frequencies ($k$-space) are reconstructed remotely on hospital edge servers using deep neural networks (e.g., End-to-End Variational Networks).
 
-![Figure 1: The Dual-Blindspot Paradox](figures/fig1_dual_blindspot.png)
+![Figure 1: The Dual Mechanism of the QoS Illusion](figures/fig1_dual_blindspot.png)
 
 ### The Hazard:
 Conventional Quality of Service (QoS) and Rate-Distortion Optimization (RDO) rely on pixel-averaged metrics (**PSNR**, **SSIM**). We prove analytically and empirically that:
-1. **The Image-Domain Blindspot:** Because acute strokes occupy microscopic brain volumes (<50 voxels), completely erasing a small acute stroke alters global PSNR by **less than 0.03 dB**—completely hidden within telemetry noise.
+1. **The Image-Domain Spatial Averaging:** Because acute strokes occupy microscopic brain volumes (<50 voxels), completely erasing a small acute stroke alters global PSNR by **less than 0.03 dB**—completely hidden within telemetry noise.
 2. **The Measurement-Domain Invariance:** Because unacquired frequencies reside in the multi-coil operator's numerical null space, physical data-consistency residual checks fail, shifting residuals by $< 10^{-8}$ (six orders of magnitude below scanner thermal noise $\sigma_\eta \sim 10^{-2}$).
 3. **The Rate-Distortion Hazard:** Escalating wireless compression from $R=4$ to $R=8$ drives acute stroke silent erasure from **18.2% up to 28.8%**, while network PSNR shifts by a negligible **0.016 dB**.
 
@@ -39,7 +39,7 @@ Conventional Quality of Service (QoS) and Rate-Distortion Optimization (RDO) rel
 
 ## 🔬 Theoretical Foundations
 
-### Proposition 1 (Image-Domain Blindspot Bound)
+### Proposition 1 (Image-Domain Metric Shift Bound)
 For a brain slice with $N$ pixels, maximum intensity $I_{\max}$, and background reconstruction Mean Squared Error $\text{MSE}_0$, erasing an acute lesion of volume $V = |\Omega|$ and contrast amplitude $\Delta I$ produces an analytical PSNR shift bounded by:
 $$\Delta\text{PSNR} \le \frac{10}{\ln 10} \cdot \frac{|\Omega| (\Delta I)^2}{N \cdot \text{MSE}_0}$$
 For a clinical $5.8\,\text{mm}$ acute focal stroke ($V = 100\,\text{mm}^3$), $|\Delta\text{PSNR}| \le 0.036\,\text{dB}$—an order of magnitude below standard network monitoring thresholds ($0.1\,\text{dB}$).
@@ -157,7 +157,7 @@ python scripts/csa_observer.py
 
 ### 5. Regenerate Paper Figures
 ```bash
-# Generate Figure 1 (Dual-blindspot paradox diagram and spectra)
+# Generate Figure 1 (Dual mechanism of the QoS illusion diagram and spectra)
 python figures/generate_fig1_redrawn.py
 
 # Generate Figure 2 (Rate-distortion vs. silent erasure curves)

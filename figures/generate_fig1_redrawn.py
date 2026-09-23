@@ -30,7 +30,7 @@ ax3 = fig.add_subplot(gs[0, 2])
 ax1.set_xlim(0, 100)
 ax1.set_ylim(0, 100)
 ax1.axis('off')
-ax1.set_title('(a) Clinical Tele-Radiology Blindspot Paradox', fontweight='bold', pad=12)
+ax1.set_title('(a) Clinical Tele-Radiology QoS Paradox', fontweight='bold', pad=12)
 
 # Load real MRI crops
 fig_dir = os.path.dirname(os.path.abspath(__file__))
@@ -149,7 +149,7 @@ r_configs = [
 ]
 
 # Highlight metric blindspot zone (< 0.05 dB)
-ax2.axhspan(0.0, 0.05, facecolor='#fee8e8', alpha=0.8, edgecolor='none', label=r'Metric Blindspot ($< 0.05$ dB)')
+ax2.axhspan(0.0, 0.05, facecolor='#fee8e8', alpha=0.8, edgecolor='none', label=r'Imperceptible Shift ($< 0.05$ dB)')
 ax2.axhline(0.10, color='#555555', linestyle=':', linewidth=1.5, label='Benchmark Margin (0.1 dB)')
 
 for r_val, color, ls, label, lw in r_configs:
@@ -173,7 +173,7 @@ ax2.set_xlim(1.5, 12.0)
 ax2.set_ylim(0.0, 0.22)
 ax2.set_xlabel('Lesion Diameter (mm)', fontweight='bold')
 ax2.set_ylabel(r'Global PSNR Shift $|\Delta\mathrm{PSNR}|$ (dB)', fontweight='bold')
-ax2.set_title('(b) Image-Domain Blindspot\n(Analytical shift diluted by volume)', fontweight='bold')
+ax2.set_title('(b) Image-Domain Metric Insensitivity\n(Analytical shift diluted by volume)', fontweight='bold')
 ax2.grid(True, linestyle=':', alpha=0.5)
 ax2.legend(loc='upper right', framealpha=0.92, fontsize=8.2)
 
@@ -219,7 +219,7 @@ ax3.set_xlim(1, 1000)
 ax3.set_ylim(1e-4, 1.2)
 ax3.set_xlabel('SVD Component Index $i$', fontweight='bold')
 ax3.set_ylabel(r'Singular Value $\sigma_i$ (Log Scale)', fontweight='bold')
-ax3.set_title('(c) Measurement-Domain Blindspot\n(Missing frequencies enter null space)', fontweight='bold')
+ax3.set_title('(c) Measurement-Domain Null Space\n(Missing frequencies enter null space)', fontweight='bold')
 ax3.grid(True, linestyle=':', alpha=0.5, which='both')
 ax3.legend(loc='upper right', framealpha=0.92, fontsize=8.5)
 

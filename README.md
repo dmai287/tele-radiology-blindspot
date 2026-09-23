@@ -74,20 +74,33 @@ Evaluated across **3,960 counterfactual test pairs** on the NYU fastMRI multi-co
 
 ---
 
-## 🚀 Proposed Network Solutions
+## 🚀 Proposed 4-Layer Tele-Radiology Architecture
 
-### 1. Diagnostic-Aware Rate-Distortion Optimization (DARDO)
-Replaces blind pixel distortion minimization with task-informed bit allocation:
-$$\min_{\mathcal{M}} \quad \text{Rate}(\mathcal{M}) \quad \text{s.t.} \quad d'_{\text{CHO}}(\mathcal{M}) \ge d'_{\text{threshold}}$$
-- Computes diagnostic gradient density: $\gamma_k = \sum_{y} W(k, y) \|\mathcal{F}\mathcal{S}_k\|_2$
-- Lightweight greedy line selection takes **$< 2\,\text{ms}$ on edge CPUs**.
-- **Result:** Cuts acute stroke silent erasure from **$28.8\%$ down to $< 4.5\%$** under identical payload ($R=8$).
+![Figure 4: 4-Layer Diagnostic-Aware Architecture](figures/fig4_architecture.png)
 
-### 2. 5G URLLC Network Slicing
-High-diagnostic-gradient packets ($\gamma_k$) are tagged with **5G QCI 1/65 (URLLC, Block Error Rate $<10^{-5}$)**, shielding mission-critical pathology bands against bursty cellular fading, while bulk structural frequencies are routed over best-effort eMBB slices.
+### The 4 Coordinated Layers:
+1. **Layer 1 (Perception & Audit):** Embeds the Causal Safety Audit (CSA) directly into transmission pre-checks, replacing uniform pixel distortion with the task-based Channelised Hotelling Observer (CHO) that models human visual neuro-radiology.
+2. **Layer 2 (Diagnostic Compression):** Replaces heuristic subsampling with **Diagnostic-Aware Rate-Distortion Optimization (DARDO)**:
+   $$\min_{\mathcal{M}} \quad \text{Rate}(\mathcal{M}) \quad \text{s.t.} \quad d'_{\text{CHO}}(\mathcal{M}) \ge d'_{\text{threshold}}$$
+   - Greedy line allocation takes **$< 2\,\text{ms}$ on mobile edge CPUs**.
+   - Slashes acute stroke silent erasure from **$28.8\%$ down to $< 4.5\%$** under identical payload ($R=8$).
+3. **Layer 3 (5G RAN Slicing):** High-diagnostic-gradient packets ($\gamma_k$) are tagged with **5G QCI 1/65 (URLLC, Block Error Rate $<10^{-5}$)**, shielding mission-critical pathology bands against bursty cellular fading, while bulk structural frequencies are routed over best-effort eMBB slices.
+4. **Layer 4 (Transport & Semantic Verification):** Ambulance edge AI extracts a 128-byte pathology token into QUIC/RTP packet headers. If the edge server detectability drops ($z_{\text{recon}} < 1.5$), it triggers a targeted **Selective Negative Acknowledgment (S-NACK)** for only the missing frequency bands ($\sim 15\,\text{ms}$).
 
-### 3. 6G Task-Based Semantic Verification Tokens
-Ambulance edge AI extracts a 128-byte pathology token into QUIC/RTP packet headers. If the edge server observer detectability drops ($z_{\text{recon}} < 1.5$), it triggers a targeted **Selective Negative Acknowledgment (S-NACK)** for the missing frequency bands.
+### Table III: Protocol & Performance Comparison
+
+| Protocol Dimension | Conventional Tele-Radiology (DASH / VarNet) | Proposed Diagnostic-Aware Framework |
+| :--- | :---: | :---: |
+| **Primary QoS Metric** | Global PSNR / SSIM | CHO Detectability ($d'_{\text{CHO}} \ge 1.5$) |
+| **Sampling Optimization** | Blind Heuristic | Diagnostic-Aware (DARDO) |
+| **Compression Factor** | $R = 8$ (87.5% bandwidth savings) | $R = 8$ (87.5% bandwidth savings) |
+| **Acute Stroke Silent Erasure** | **$28.79\%$ (Clinical Hazard)** | **$< 4.5\%$ (Clinically Safe)** |
+| **Mean Lesion Metric Shift** | $|\Delta\text{PSNR}| = 0.016\,$dB (Imperceptible) | Verified $z_{\text{recon}} \ge 1.5$ |
+| **Wireless RAN Policy** | Best-Effort (eMBB) | 5G URLLC (QCI 1/65) |
+| **Fading Loss Immunity** | Vulnerable to packet loss | Guaranteed BLER $< 10^{-5}$ |
+| **Transport Verification** | None (blind decode) | 128-Byte Semantic Token |
+| **Retransmission Policy** | Full Volume ($>200\,$MB) | Targeted S-NACK ($\Delta k \approx 1.2\,$MB) |
+| **Total Triage Latency** | $<105\,$s (unreliable) | **$101.83\,$s (guaranteed safe)** |
 
 ---
 
@@ -100,20 +113,21 @@ tele_radiology_blindspot/
 ├── .gitignore              # Git ignore rules for LaTeX and Python
 ├── requirements.txt        # Python package dependencies
 ├── IEEEtran.cls            # IEEE LaTeX conference class
-├── main.tex                # Complete paper LaTeX source (5 pages)
+├── main.tex                # Complete paper LaTeX source (6 pages)
 ├── references.bib          # 16 peer-reviewed citations
-├── main.pdf                # Compiled publication-ready PDF
+├── main.pdf                # Compiled publication-ready PDF (6 pages)
 ├── data/                   # Audited benchmark evaluation dataset
 │   └── exp1_classical_R468.csv  # 3,960 fastMRI test rows
 ├── figures/                # Publication-grade vector (PDF) & raster (PNG) figures
 │   ├── fig1_dual_blindspot.pdf / .png
 │   ├── fig2_network_rate_distortion_erasure.pdf / .png
 │   ├── fig3_svd_residual_roc.pdf / .png
-│   ├── fig4_cho_decision_landscape.pdf / .png
+│   ├── fig4_architecture.pdf / .png
 │   ├── fig5_safety_heatmaps_dashboard.pdf / .png
 │   ├── fig6_qualitative_case_study.pdf / .png
 │   ├── generate_fig1_redrawn.py
-│   └── generate_fig2.py
+│   ├── generate_fig2.py
+│   └── generate_fig4_architecture.py
 ├── scripts/                # Reproducibility and simulation scripts
 │   ├── reproduce_tables.py # Computes Table I and Table II from data
 │   ├── demo_dardo.py       # DARDO greedy allocation & 5G slicing simulation

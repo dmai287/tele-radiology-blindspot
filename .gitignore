@@ -1,0 +1,39 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.lot
+*.lof
+
+# Python cache & environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.env
+.venv/
+env/
+venv/
+
+# Temporary inspect renders
+rendered_pages/
+figures/rendered_pages/
+page_*_preview.png
+figures/page_*.png
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~

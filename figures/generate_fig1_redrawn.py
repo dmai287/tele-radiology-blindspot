@@ -45,50 +45,54 @@ img_recon = img_recon.resize((240, 240), Image.Resampling.LANCZOS)
 card_tx = patches.FancyBboxPatch((1, 38), 41.5, 60, boxstyle="round,pad=0.8,rounding_size=2.5",
                                  facecolor='#f0f4f8', edgecolor='#1f77b4', linewidth=1.8)
 ax1.add_patch(card_tx)
-ax1.text(21.7, 93.5, "TRANSMITTER (Mobile Ambulance)", ha='center', va='center',
-         fontsize=8.2, fontweight='bold', color='#08519c')
+ax1.text(21.7, 94.0, "TRANSMITTER", ha='center', va='center',
+         fontsize=8.5, fontweight='bold', color='#08519c')
+ax1.text(21.7, 88.2, "(Mobile Ambulance)", ha='center', va='center',
+         fontsize=7.4, fontweight='bold', color='#1f77b4')
 
 # Place Reference MRI image inside card_tx
 im_box_ref = OffsetImage(img_ref, zoom=0.33)
-ab_ref = AnnotationBbox(im_box_ref, (21.7, 68), frameon=True,
+ab_ref = AnnotationBbox(im_box_ref, (21.7, 66.5), frameon=True,
                         bboxprops=dict(edgecolor='#1f77b4', facecolor='black', lw=1.2, boxstyle='square,pad=0.1'))
 ax1.add_artist(ab_ref)
 
-ax1.text(21.7, 44.5, "Reference Scan\n(Acute 5.8 mm Stroke)", ha='center', va='center',
+ax1.text(21.7, 44.0, "Reference Scan\n(Acute 5.8 mm Stroke)", ha='center', va='center',
          fontsize=8, fontweight='bold', color='#111111')
 
 # Wireless Transmission Flow: Arrow -> 5G Badge -> Arrow
 # First segment: card_tx to badge
-ax1.annotate('', xy=(44.5, 68), xytext=(42.5, 68),
+ax1.annotate('', xy=(44.5, 66.5), xytext=(42.5, 66.5),
              arrowprops=dict(arrowstyle="->", color='#d95f02', lw=2.2))
 
 # Channel badge
-badge_5g = patches.FancyBboxPatch((44.5, 54), 11.5, 28, boxstyle="round,pad=0.4,rounding_size=1.8",
+badge_5g = patches.FancyBboxPatch((44.5, 52.5), 11.5, 28, boxstyle="round,pad=0.4,rounding_size=1.8",
                                   facecolor='#fff7bc', edgecolor='#d95f02', linewidth=1.5)
 ax1.add_patch(badge_5g)
-ax1.text(50.2, 77.5, "5G Uplink", ha='center', va='center', fontsize=7.2, fontweight='bold', color='#b15928')
-ax1.text(50.2, 69.5, "R = 8", ha='center', va='center', fontsize=9.0, fontweight='bold', color='#d95f02')
-ax1.text(50.2, 62.5, "-87.5%", ha='center', va='center', fontsize=7.5, fontweight='bold', color='#333333')
-ax1.text(50.2, 57.0, "Payload", ha='center', va='center', fontsize=6.8, color='#555555')
+ax1.text(50.2, 76.0, "5G Uplink", ha='center', va='center', fontsize=7.2, fontweight='bold', color='#b15928')
+ax1.text(50.2, 68.0, "R = 8", ha='center', va='center', fontsize=9.0, fontweight='bold', color='#d95f02')
+ax1.text(50.2, 61.0, "-87.5%", ha='center', va='center', fontsize=7.5, fontweight='bold', color='#333333')
+ax1.text(50.2, 55.5, "Payload", ha='center', va='center', fontsize=6.8, color='#555555')
 
 # Second segment: badge to card_rx
-ax1.annotate('', xy=(58.5, 68), xytext=(56.5, 68),
+ax1.annotate('', xy=(58.5, 66.5), xytext=(56.5, 66.5),
              arrowprops=dict(arrowstyle="-|>", color='#d95f02', lw=2.2, mutation_scale=14))
 
 # Outer card for Receiver (Hospital Edge AI)
 card_rx = patches.FancyBboxPatch((58.5, 38), 40.5, 60, boxstyle="round,pad=0.8,rounding_size=2.5",
                                  facecolor='#fff5f5', edgecolor='#d62728', linewidth=1.8)
 ax1.add_patch(card_rx)
-ax1.text(78.7, 93.5, "RECEIVER (Hospital Edge AI)", ha='center', va='center',
-         fontsize=8.2, fontweight='bold', color='#a50f15')
+ax1.text(78.7, 94.0, "RECEIVER", ha='center', va='center',
+         fontsize=8.5, fontweight='bold', color='#a50f15')
+ax1.text(78.7, 88.2, "(Hospital Edge AI)", ha='center', va='center',
+         fontsize=7.4, fontweight='bold', color='#d62728')
 
 # Place Reconstructed MRI image inside card_rx
 im_box_recon = OffsetImage(img_recon, zoom=0.33)
-ab_recon = AnnotationBbox(im_box_recon, (78.7, 68), frameon=True,
+ab_recon = AnnotationBbox(im_box_recon, (78.7, 66.5), frameon=True,
                           bboxprops=dict(edgecolor='#d62728', facecolor='black', lw=1.2, boxstyle='square,pad=0.1'))
 ax1.add_artist(ab_recon)
 
-ax1.text(78.7, 44.5, "Edge AI Recon (VarNet)\n(SILENTLY ERASED)", ha='center', va='center',
+ax1.text(78.7, 44.0, "Edge AI Recon (VarNet)\n(SILENTLY ERASED)", ha='center', va='center',
          fontsize=8, fontweight='bold', color='#a50f15')
 
 # Bottom Audit Summary Card: The Dual Gate Paradox
@@ -112,7 +116,7 @@ ax1.text(17.7, 9.5, "PASSED (Normal)", ha='center', va='center', fontsize=7.8, f
 pill2 = patches.FancyBboxPatch((35.5, 5.5), 29.5, 21, boxstyle="round,pad=0.4,rounding_size=2",
                                facecolor='#e5f5e0', edgecolor='#31a354', linewidth=1.2)
 ax1.add_patch(pill2)
-ax1.text(50.2, 22.0, r"Residual Gate ($\|\mathbf{A}\hat{\mathbf{X}}-\mathbf{Y}\|_2$)", ha='center', va='center', fontsize=7.3, fontweight='bold', color='#006d2c')
+ax1.text(50.2, 22.0, r"Residual Gate ($\|\mathbf{A}\hat{\mathbf{X}}-\mathbf{Y}\|_2$)", ha='center', va='center', fontsize=6.8, fontweight='bold', color='#006d2c')
 ax1.text(50.2, 16.0, r"$\Delta\mathrm{Residual} < 10^{-8}$", ha='center', va='center', fontsize=7.2, color='#222222')
 ax1.text(50.2, 9.5, "PASSED (Normal)", ha='center', va='center', fontsize=7.8, fontweight='bold', color='#006d2c')
 

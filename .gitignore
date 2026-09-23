@@ -30,6 +30,10 @@ figures/rendered_pages/
 page_*_preview.png
 figures/page_*.png
 
+# Compressed archives
+*.zip
+*.tar.gz
+
 # OS & Editor files
 .DS_Store
 Thumbs.db

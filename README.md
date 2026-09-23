@@ -1,4 +1,4 @@
-# The Tele-Radiology Blind Spot: Evaluating Diagnostic Omission vs. Network Rate-Distortion in Bandwidth-Constrained Medical Imaging
+# The Tele-Radiology Blind Spot: Silent Pathology Erasure Under Network Rate-Distortion
 
 [![IEEE Conference](https://img.shields.io/badge/IEEE-ICOIN_2027-00629B.svg)](https://icoin.org/)
 [![Paper PDF](https://img.shields.io/badge/Paper-PDF-red.svg)](main.pdf)
@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Official open-source repository and reproducibility suite for the paper:  
-**"The Tele-Radiology Blind Spot: Evaluating Diagnostic Omission vs. Network Rate-Distortion in Bandwidth-Constrained Medical Imaging"**  
+**"The Tele-Radiology Blind Spot: Silent Pathology Erasure Under Network Rate-Distortion"**  
 *The 39th International Conference on Information Networking (IEEE ICOIN 2027), Nha Trang, Vietnam.*
 
 **Authors:**  
@@ -182,7 +182,7 @@ If you use this codebase, methodology, or findings in your research, please cite
 ```bibtex
 @inproceedings{mai2027teleradiology,
   author    = {Mai, Dat Tat and Pham, Thai Viet and Kang, James Jin},
-  title     = {The Tele-Radiology Blind Spot: Evaluating Diagnostic Omission vs. Network Rate-Distortion in Bandwidth-Constrained Medical Imaging},
+  title     = {The Tele-Radiology Blind Spot: Silent Pathology Erasure Under Network Rate-Distortion},
   booktitle = {Proceedings of the 39th International Conference on Information Networking (ICOIN 2027)},
   year      = {2027},
   address   = {Nha Trang, Vietnam},

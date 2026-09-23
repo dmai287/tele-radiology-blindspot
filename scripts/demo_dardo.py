@@ -4,7 +4,7 @@ demo_dardo.py
 =============
 Demonstrates Diagnostic-Aware Rate-Distortion Optimization (DARDO)
 from Section V-B of the IEEE ICOIN 2027 paper:
-"The Tele-Radiology Blind Spot: Silent Pathology Erasure Under Network Rate-Distortion"
+"The QoS Illusion in Tele-Radiology: Silent Pathology Erasure Under Network Rate-Distortion"
 
 Authors: Dat Tat Mai, Thai Viet Pham, James Jin Kang (RMIT University)
 """

@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2026-09-25T12:00:00.000Z" agent="Mozilla/5.0" version="21.6.8" type="device">
+<mxfile host="app.diagrams.net" modified="2026-09-25T13:00:00.000Z" agent="Mozilla/5.0" version="21.6.8" type="device">
   <diagram id="fig4_dardo_architecture" name="Figure 4 Architecture">
-    <mxGraphModel dx="1060" dy="385" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1060" pageHeight="385" math="1" shadow="0">
+    <mxGraphModel dx="1110" dy="385" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1110" pageHeight="385" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -9,19 +9,19 @@
         <!-- MAIN TITLE                                 -->
         <!-- ========================================== -->
         <mxCell id="title" value="&lt;b style=&quot;font-size: 15px; letter-spacing: 0.2px; color: #0f172a;&quot;&gt;FOUR-LAYER DIAGNOSTIC-AWARE TELE-RADIOLOGY ARCHITECTURE (DARDO + CSA + 5G URLLC)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11.5px; color: #475569;&quot;&gt;Mobile Stroke Unit (MSU) Scanner &amp;rarr; Dual-Slice 5G Cellular RAN &amp;rarr; Hospital Edge AI Safety Audit&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="180" y="2" width="700" height="32" as="geometry" />
+          <mxGeometry x="205" y="2" width="700" height="32" as="geometry" />
         </mxCell>
 
         <!-- ========================================== -->
         <!-- COLUMN 1: TRANSMITTER (MSU)                -->
         <!-- ========================================== -->
         <mxCell id="col_tx" value="&lt;b&gt;TRANSMITTER: MOBILE STROKE UNIT (MSU)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=24;fillColor=#0f172a;strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;" vertex="1" parent="1">
-          <mxGeometry x="12" y="36" width="315" height="262" as="geometry" />
+          <mxGeometry x="15" y="36" width="315" height="268" as="geometry" />
         </mxCell>
 
         <!-- Layer 1 Flex Box -->
-        <mxCell id="l1_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#e0f2fe; color:#0369a1; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #7dd3fc; border-radius:3px 3px 0 0;&quot;&gt;LAYER 1: TASK PROFILER (CSA) &lt;span style=&quot;font-weight:normal; font-size:10px; color:#0284c7;&quot;&gt;&amp;mdash; Lesion Prior&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11.5px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Raw Data:&lt;/b&gt; Multi-coil raw &lt;i&gt;k&lt;/i&gt;-space &lt;b&gt;Y&lt;/b&gt; &amp;isin; &amp;#x2102;&lt;sup&gt;C&amp;times;K&lt;/sup&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Task Prior:&lt;/b&gt; Spectrum &lt;b style=&quot;color:#0284c7;&quot;&gt;&lt;i&gt;W(k&lt;sub&gt;x&lt;/sub&gt;,k&lt;sub&gt;y&lt;/sub&gt;) = |&amp;#x2131;{w&lt;sub&gt;CHO&lt;/sub&gt;}|&lt;sup&gt;2&lt;/sup&gt;&lt;/i&gt;&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#f0f9ff; border:1px solid #38bdf8; border-radius:3px; color:#0284c7; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Safety Target: Detectability &lt;i&gt;d'&lt;/i&gt;&lt;sub&gt;CHO&lt;/sub&gt; &amp;ge; 1.5&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#bae6fd;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_tx">
-          <mxGeometry x="8" y="28" width="299" height="102" as="geometry" />
+        <mxCell id="l1_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#e0f2fe; color:#0369a1; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #7dd3fc; border-radius:3px 3px 0 0;&quot;&gt;LAYER 1: TASK PROFILER (CSA) &lt;span style=&quot;font-weight:normal; font-size:10px; color:#0284c7;&quot;&gt;&amp;mdash; Lesion Prior&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Raw Data:&lt;/b&gt; Multi-coil raw &lt;i&gt;k&lt;/i&gt;-space &lt;b&gt;Y&lt;/b&gt; &amp;isin; &amp;#x2102;&lt;sup&gt;C&amp;times;K&lt;/sup&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Task Prior:&lt;/b&gt; Spectrum &lt;b style=&quot;color:#0284c7;&quot;&gt;&lt;i&gt;W(k&lt;sub&gt;x&lt;/sub&gt;,k&lt;sub&gt;y&lt;/sub&gt;) = |&amp;#x2131;{w&lt;sub&gt;CHO&lt;/sub&gt;}|&lt;sup&gt;2&lt;/sup&gt;&lt;/i&gt;&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f0f9ff; border:1px solid #38bdf8; border-radius:3px; color:#0284c7; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Safety Target: Detectability &lt;i&gt;d'&lt;/i&gt;&lt;sub&gt;CHO&lt;/sub&gt; &amp;ge; 1.5&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#bae6fd;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_tx">
+          <mxGeometry x="8" y="28" width="299" height="106" as="geometry" />
         </mxCell>
 
         <!-- Downward arrow Layer 1 -> Layer 2 -->
@@ -30,8 +30,8 @@
         </mxCell>
 
         <!-- Layer 2 Flex Box -->
-        <mxCell id="l2_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#dcfce7; color:#15803d; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #86efac; border-radius:3px 3px 0 0;&quot;&gt;LAYER 2: DIAGNOSTIC COMPRESSION (DARDO)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11.5px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Diagnostic Grad:&lt;/b&gt; &lt;span style=&quot;color:#15803d;font-weight:bold;&quot;&gt;&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; = &amp;sum;&lt;sub&gt;y&lt;/sub&gt; W(k,y) ||&amp;#x2131;S&lt;sub&gt;k&lt;/sub&gt;||&lt;sub&gt;2&lt;/sub&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Greedy Split:&lt;/b&gt; Sort in &amp;lt; 2ms &amp;rArr; &lt;b style=&quot;color:#ea580c;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt;&lt;/b&gt; vs. &lt;b style=&quot;color:#64748b;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#f0fdf4; border:1px solid #4ade80; border-radius:3px; color:#166534; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Safety Probe: 128B Token &lt;b&gt;&amp;theta;&lt;/b&gt; in Header&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#bbf7d0;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_tx">
-          <mxGeometry x="8" y="150" width="299" height="104" as="geometry" />
+        <mxCell id="l2_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#dcfce7; color:#15803d; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #86efac; border-radius:3px 3px 0 0;&quot;&gt;LAYER 2: DIAGNOSTIC COMPRESSION (DARDO)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Diagnostic Grad:&lt;/b&gt; &lt;span style=&quot;color:#15803d;font-weight:bold;&quot;&gt;&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; = &amp;sum;&lt;sub&gt;y&lt;/sub&gt; W(k,y) ||&amp;#x2131;S&lt;sub&gt;k&lt;/sub&gt;||&lt;sub&gt;2&lt;/sub&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Greedy Split:&lt;/b&gt; Sort in &amp;lt; 2ms &amp;rArr; &lt;b style=&quot;color:#ea580c;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt;&lt;/b&gt; vs. &lt;b style=&quot;color:#64748b;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f0fdf4; border:1px solid #4ade80; border-radius:3px; color:#166534; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Safety Probe: 128B Token &lt;b&gt;&amp;theta;&lt;/b&gt; in Header&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#bbf7d0;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_tx">
+          <mxGeometry x="8" y="152" width="299" height="106" as="geometry" />
         </mxCell>
 
 
@@ -39,17 +39,17 @@
         <!-- COLUMN 2: 5G RAN NETWORK                   -->
         <!-- ========================================== -->
         <mxCell id="col_ran" value="&lt;b&gt;5G / B5G CELLULAR RADIO ACCESS NETWORK&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=24;fillColor=#0f172a;strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;" vertex="1" parent="1">
-          <mxGeometry x="369" y="36" width="322" height="262" as="geometry" />
+          <mxGeometry x="395" y="36" width="320" height="268" as="geometry" />
         </mxCell>
 
         <!-- URLLC Slice Box -->
-        <mxCell id="urllc_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ffedd5; color:#c2410c; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #fdba74; border-radius:3px 3px 0 0;&quot;&gt;LAYER 3: 5G URLLC SLICE (MISSION-CRITICAL)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Payload:&lt;/b&gt; &lt;b style=&quot;color:#ea580c;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; = {k | &amp;gamma;&lt;sub&gt;k&lt;/sub&gt; &amp;ge; &amp;tau;}&lt;/b&gt; + &lt;b style=&quot;color:#15803d;&quot;&gt;Token &amp;theta;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; 3GPP QoS:&lt;/b&gt; QCI 1/65 (BLER &amp;lt; 10&lt;sup&gt;-5&lt;/sup&gt;, Latency &amp;lt; 10ms)&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#fff7ed; border:1px solid #fb923c; border-radius:3px; color:#c2410c; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Channel: Dedicated BWP (Zero Burst Drop)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fed7aa;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_ran">
-          <mxGeometry x="8" y="28" width="306" height="102" as="geometry" />
+        <mxCell id="urllc_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ffedd5; color:#c2410c; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #fdba74; border-radius:3px 3px 0 0;&quot;&gt;LAYER 3: 5G URLLC SLICE (MISSION-CRITICAL)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Payload:&lt;/b&gt; &lt;b style=&quot;color:#ea580c;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; = {k | &amp;gamma;&lt;sub&gt;k&lt;/sub&gt; &amp;ge; &amp;tau;}&lt;/b&gt; + &lt;b style=&quot;color:#15803d;&quot;&gt;Token &amp;theta;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; 3GPP QoS:&lt;/b&gt; QCI 1/65 (BLER &amp;lt; 10&lt;sup&gt;-5&lt;/sup&gt;, Latency &amp;lt; 10ms)&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#fff7ed; border:1px solid #fb923c; border-radius:3px; color:#c2410c; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Channel: Dedicated BWP (Zero Burst Drop)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fed7aa;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_ran">
+          <mxGeometry x="8" y="28" width="304" height="106" as="geometry" />
         </mxCell>
 
         <!-- eMBB Slice Box -->
-        <mxCell id="embb_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#f1f5f9; color:#334155; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #cbd5e1; border-radius:3px 3px 0 0;&quot;&gt;LAYER 3: 5G eMBB SLICE (BULK ANATOMY)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Bulk Payload:&lt;/b&gt; &lt;b style=&quot;color:#475569;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt; = {k | &amp;gamma;&lt;sub&gt;k&lt;/sub&gt; &amp;lt; &amp;tau;}&lt;/b&gt; &lt;i style=&quot;color:#64748b;&quot;&gt;(Skull Context)&lt;/i&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Policy:&lt;/b&gt; Dynamic DASH streaming &lt;i style=&quot;color:#64748b;&quot;&gt;(Loss-tolerant)&lt;/i&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#f8fafc; border:1px solid #94a3b8; border-radius:3px; color:#475569; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Throughput: Best-Effort (Absorbs Congestion)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_ran">
-          <mxGeometry x="8" y="150" width="306" height="104" as="geometry" />
+        <mxCell id="embb_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#f1f5f9; color:#334155; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #cbd5e1; border-radius:3px 3px 0 0;&quot;&gt;LAYER 3: 5G eMBB SLICE (BULK ANATOMY)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Bulk Payload:&lt;/b&gt; &lt;b style=&quot;color:#475569;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt; = {k | &amp;gamma;&lt;sub&gt;k&lt;/sub&gt; &amp;lt; &amp;tau;}&lt;/b&gt; &lt;i style=&quot;color:#64748b;&quot;&gt;(Skull Context)&lt;/i&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Policy:&lt;/b&gt; Dynamic DASH streaming &lt;i style=&quot;color:#64748b;&quot;&gt;(Loss-tolerant)&lt;/i&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f8fafc; border:1px solid #94a3b8; border-radius:3px; color:#475569; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Throughput: Best-Effort (Absorbs Congestion)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_ran">
+          <mxGeometry x="8" y="152" width="304" height="106" as="geometry" />
         </mxCell>
 
 
@@ -57,12 +57,12 @@
         <!-- COLUMN 3: RECEIVER (EDGE SERVER)           -->
         <!-- ========================================== -->
         <mxCell id="col_rx" value="&lt;b&gt;RECEIVER: HOSPITAL EDGE SERVER&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=24;fillColor=#0f172a;strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;" vertex="1" parent="1">
-          <mxGeometry x="733" y="36" width="315" height="262" as="geometry" />
+          <mxGeometry x="780" y="36" width="315" height="268" as="geometry" />
         </mxCell>
 
         <!-- Recon Engine Box -->
-        <mxCell id="rx_recon_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ede9fe; color:#6d28d9; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #c4b5fd; border-radius:3px 3px 0 0;&quot;&gt;EDGE AI RECONSTRUCTION (VarNet)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Stream Fusion:&lt;/b&gt; Fuses &lt;b&gt;Y&lt;/b&gt;&lt;sub&gt;URLLC&lt;/sub&gt; &amp;cup; &lt;b&gt;Y&lt;/b&gt;&lt;sub&gt;eMBB&lt;/sub&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Deep Recon:&lt;/b&gt; &lt;span style=&quot;color:#6d28d9;font-weight:bold;&quot;&gt;X&amp;#770; = &amp;#x211b;&lt;sub&gt;&amp;theta;&lt;/sub&gt;(Y)&lt;/span&gt; in 1.8 s on Edge GPU&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#f5f3ff; border:1px solid #c4b5fd; border-radius:3px; color:#7c3aed; font-size:10.5px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Residual: Passed &lt;span style=&quot;color:#6d28d9;&quot;&gt;||AX&amp;#770; - Y|| &amp;lt; &amp;sigma;&lt;sub&gt;&amp;eta;&lt;/sub&gt;&lt;/span&gt; (Null-Space Blind!)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ddd6fe;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_rx">
-          <mxGeometry x="8" y="28" width="299" height="102" as="geometry" />
+        <mxCell id="rx_recon_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ede9fe; color:#6d28d9; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #c4b5fd; border-radius:3px 3px 0 0;&quot;&gt;EDGE AI RECONSTRUCTION (VarNet)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Stream Fusion:&lt;/b&gt; Fuses &lt;b&gt;Y&lt;/b&gt;&lt;sub&gt;URLLC&lt;/sub&gt; &amp;cup; &lt;b&gt;Y&lt;/b&gt;&lt;sub&gt;eMBB&lt;/sub&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Deep Recon:&lt;/b&gt; &lt;span style=&quot;color:#6d28d9;font-weight:bold;&quot;&gt;X&amp;#770; = &amp;#x211b;&lt;sub&gt;&amp;theta;&lt;/sub&gt;(Y)&lt;/span&gt; in 1.8 s on Edge GPU&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f5f3ff; border:1px solid #c4b5fd; border-radius:3px; color:#7c3aed; font-size:10.5px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Residual: Passed &lt;span style=&quot;color:#6d28d9;&quot;&gt;||AX&amp;#770; - Y|| &amp;lt; &amp;sigma;&lt;sub&gt;&amp;eta;&lt;/sub&gt;&lt;/span&gt; (Null-Space Blind!)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ddd6fe;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_rx">
+          <mxGeometry x="8" y="28" width="299" height="106" as="geometry" />
         </mxCell>
 
         <!-- Downward arrow Recon -> Layer 4 -->
@@ -71,43 +71,44 @@
         </mxCell>
 
         <!-- Layer 4 Audit Box -->
-        <mxCell id="layer4_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ffe4e6; color:#be123c; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #fecdd3; border-radius:3px 3px 0 0;&quot;&gt;LAYER 4: SEMANTIC AUDIT &amp;amp; DECISION GATE&lt;/div&gt;&lt;div style=&quot;margin:3px 8px; background:#f0fdf4; border:1px solid #86efac; border-radius:3px; padding:3px 6px; text-align:left;&quot;&gt;&lt;b style=&quot;color:#15803d;font-size:11.5px;&quot;&gt;&amp;#x2714; z &amp;ge; 1.5 (AUDIT PASSED: STROKE INTACT)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534;font-size:9.5px;&quot;&gt;Score &lt;i&gt;z&lt;/i&gt;&lt;sub&gt;recon&lt;/sub&gt; &amp;ge; 1.5 &amp;rarr; Safe, Released to PACS &amp;amp; Clinician&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 5px 8px; background:#fef2f2; border:1px solid #fca5a5; border-radius:3px; padding:3px 6px; text-align:left;&quot;&gt;&lt;b style=&quot;color:#b91c1c;font-size:11.5px;&quot;&gt;&amp;#x2718; z &amp;lt; 1.5 (AUDIT FAILED: STROKE ERASED!)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#dc2626;font-size:9.5px;font-weight:bold;&quot;&gt;Silent Erasure Alert &amp;rArr; Trigger Targeted S-NACK Recovery&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fecdd3;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_rx">
-          <mxGeometry x="8" y="150" width="299" height="104" as="geometry" />
+        <mxCell id="layer4_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ffe4e6; color:#be123c; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #fecdd3; border-radius:3px 3px 0 0;&quot;&gt;LAYER 4: SEMANTIC AUDIT &amp;amp; DECISION GATE&lt;/div&gt;&lt;div style=&quot;margin:3px 8px; background:#f0fdf4; border:1px solid #86efac; border-radius:3px; padding:3px 6px; text-align:left;&quot;&gt;&lt;b style=&quot;color:#15803d;font-size:11px;&quot;&gt;&amp;#x2714; z &amp;ge; 1.5 (AUDIT PASSED: STROKE INTACT)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534;font-size:9.5px;&quot;&gt;Score &lt;i&gt;z&lt;/i&gt;&lt;sub&gt;recon&lt;/sub&gt; &amp;ge; 1.5 &amp;rarr; Safe, Released to PACS &amp;amp; Clinician&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#fef2f2; border:1px solid #fca5a5; border-radius:3px; padding:3px 6px; text-align:left;&quot;&gt;&lt;b style=&quot;color:#b91c1c;font-size:11px;&quot;&gt;&amp;#x2718; z &amp;lt; 1.5 (AUDIT FAILED: STROKE ERASED)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#dc2626;font-size:9.5px;font-weight:bold;&quot;&gt;Silent Erasure Alert &amp;rArr; Trigger Targeted S-NACK Recovery&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fecdd3;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_rx">
+          <mxGeometry x="8" y="152" width="299" height="106" as="geometry" />
         </mxCell>
 
 
         <!-- ========================================== -->
         <!-- FORWARD FLOW ARROWS (INTER-SWIMLANE)       -->
+        <!-- Gap: 65 px wide (330 to 395, and 715 to 780)-->
         <!-- ========================================== -->
         <!-- URLLC Forward: Tx -> RAN -->
         <mxCell id="arr_urllc_1" value="&lt;b style=&quot;color:#c2410c;font-size:10.5px;&quot;&gt;URLLC Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#c2410c;font-size:9.5px;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; + &amp;theta;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#ea580c;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="327" y="112" as="sourcePoint" />
-            <mxPoint x="369" y="112" as="targetPoint" />
+            <mxPoint x="330" y="112" as="sourcePoint" />
+            <mxPoint x="395" y="112" as="targetPoint" />
           </mxGeometry>
         </mxCell>
 
         <!-- URLLC Forward: RAN -> Rx -->
         <mxCell id="arr_urllc_2" value="&lt;b style=&quot;color:#c2410c;font-size:10.5px;&quot;&gt;URLLC Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#c2410c;font-size:9.5px;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; + &amp;theta;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#ea580c;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="691" y="112" as="sourcePoint" />
-            <mxPoint x="733" y="112" as="targetPoint" />
+            <mxPoint x="715" y="112" as="sourcePoint" />
+            <mxPoint x="780" y="112" as="targetPoint" />
           </mxGeometry>
         </mxCell>
 
         <!-- eMBB Forward: Tx -> RAN -->
         <mxCell id="arr_embb_1" value="&lt;b style=&quot;color:#475569;font-size:10.5px;&quot;&gt;eMBB Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#475569;font-size:9.5px;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#64748b;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="327" y="232" as="sourcePoint" />
-            <mxPoint x="369" y="232" as="targetPoint" />
+            <mxPoint x="330" y="235" as="sourcePoint" />
+            <mxPoint x="395" y="235" as="targetPoint" />
           </mxGeometry>
         </mxCell>
 
         <!-- eMBB Forward: RAN -> Rx -->
         <mxCell id="arr_embb_2" value="&lt;b style=&quot;color:#475569;font-size:10.5px;&quot;&gt;eMBB Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#475569;font-size:9.5px;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#64748b;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="691" y="232" as="sourcePoint" />
-            <mxPoint x="733" y="232" as="targetPoint" />
+            <mxPoint x="715" y="235" as="sourcePoint" />
+            <mxPoint x="780" y="235" as="targetPoint" />
           </mxGeometry>
         </mxCell>
 
@@ -115,17 +116,17 @@
         <!-- ========================================== -->
         <!-- S-NACK RETRANSMISSION PROTOCOL (BOTTOM)    -->
         <!-- ========================================== -->
-        <mxCell id="snack_banner" value="&lt;b style=&quot;color:#991b1b;font-size:12px;&quot;&gt;CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#7f1d1d;font-size:10.5px;&quot;&gt;Smart Recovery: Requests only missing high-&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; bands (&amp;Delta;k &amp;approx; 1.2 MB, &amp;Delta;t &amp;approx; 15 ms) &amp;mdash; Avoids 200 MB full retransmission&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.3;arcSize=3;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="220" y="314" width="620" height="44" as="geometry" />
+        <mxCell id="snack_banner" value="&lt;div style=&quot;display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; padding:4px 12px; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;color:#991b1b; font-size:12px; font-weight:bold;&quot;&gt;CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL&lt;/div&gt;&lt;div style=&quot;color:#7f1d1d; font-size:10.5px; margin-top:2px;&quot;&gt;Smart Recovery: Requests only missing high-&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; bands (&amp;Delta;k &amp;approx; 1.2 MB, &amp;Delta;t &amp;approx; 15 ms) &amp;mdash; Avoids 200 MB full retransmission&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.3;arcSize=3;overflow=hidden;" vertex="1" parent="1">
+          <mxGeometry x="230" y="318" width="650" height="48" as="geometry" />
         </mxCell>
 
         <!-- Return Arrow 1: Downward from card_fail to S-NACK banner -->
         <mxCell id="arr_snack_down" value="&lt;b style=&quot;color:#b91c1c;font-size:10px;&quot;&gt;Audit Failed&lt;br&gt;(Stroke Erased)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=6;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;strokeWidth=2.2;fontColor=#b91c1c;fontSize=10;fontFamily=Helvetica;align=left;spacingLeft=6;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="890" y="298" as="sourcePoint" />
-            <mxPoint x="840" y="336" as="targetPoint" />
+            <mxPoint x="937" y="304" as="sourcePoint" />
+            <mxPoint x="880" y="342" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="890" y="336" />
+              <mxPoint x="937" y="342" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -133,10 +134,10 @@
         <!-- Return Arrow 2: Left and UP from S-NACK banner to Layer 2 DARDO -->
         <mxCell id="arr_snack_up" value="&lt;b style=&quot;color:#b91c1c;font-size:10px;&quot;&gt;Targeted S-NACK&lt;br&gt;(Resend Missing &amp;Delta;k)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=6;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;strokeWidth=2.2;fontColor=#b91c1c;fontSize=10;fontFamily=Helvetica;align=right;spacingRight=6;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="220" y="336" as="sourcePoint" />
-            <mxPoint x="165" y="298" as="targetPoint" />
+            <mxPoint x="230" y="342" as="sourcePoint" />
+            <mxPoint x="172" y="304" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="165" y="336" />
+              <mxPoint x="172" y="342" />
             </Array>
           </mxGeometry>
         </mxCell>

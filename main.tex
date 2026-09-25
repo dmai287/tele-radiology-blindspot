@@ -28,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-In emergency tele-radiology and mobile stroke ambulances, brain MRI scans must be aggressively compressed before transmission over wireless networks to meet urgent clinical deadlines. Hospital edge servers deploy deep learning reconstruction models (such as deep variational networks) to recover images from 75 to 87.5 percent compressed data (4-fold to 8-fold compression), relying on standard Quality of Service (QoS) metrics like PSNR and SSIM to certify transmission quality. In this paper, we expose a critical hazard termed the QoS Illusion in tele-radiology: deep neural networks trained to minimize whole-image pixel errors learn to silently erase small acute strokes into smooth, false-normal tissue. We prove mathematically that: (1) because PSNR averages error across millions of pixels, completely erasing a small acute stroke shifts global PSNR by less than 0.03 dB, which is completely hidden inside telemetry noise; and (2) physical data-consistency checks fail because missing details fall into the measurement null space, altering residuals by less than scanner thermal noise. To evaluate this danger, we propose the Causal Safety Audit (CSA), which tests whether remote doctors can detect physical test lesions after edge AI reconstruction. Evaluating 3,960 brain MRI test cases, we find that increasing wireless compression from 4-fold to 8-fold causes deep learning models to silently erase acute strokes in 18.2 percent to 28.8 percent of cases. Yet, conventional network QoS metrics report an almost unchanged PSNR (a negligible 0.016 dB difference) and high SSIM above 0.86. These results show that tele-radiology networks cannot guarantee medical safety using traditional pixel-averaged metrics alone, and must adopt diagnostic-aware edge streaming protocols.
+In emergency tele-radiology and mobile stroke ambulances, brain MRI scans must be aggressively compressed before transmission over wireless networks to meet urgent clinical deadlines. Hospital edge servers deploy deep learning reconstruction models (such as deep variational networks) to recover images from 75 to 87.5 percent compressed data (4-fold to 8-fold compression), relying on standard Quality of Service (QoS) metrics like PSNR and SSIM to certify transmission quality. In this paper, we expose a critical hazard termed the QoS Illusion in tele-radiology: deep neural networks trained to minimize whole-image pixel errors learn to silently erase small acute strokes into smooth, false-normal tissue. We prove mathematically that: (1) because PSNR averages error across millions of pixels, completely erasing a small acute stroke shifts global PSNR by less than 0.03 dB, which is completely hidden inside telemetry noise; and (2) physical data-consistency checks fail because missing details fall into the measurement null space, altering residuals by less than scanner thermal noise. To evaluate this danger, we propose the Causal Safety Audit (CSA), which quantifies physical lesion detectability using task-based model observers after edge AI reconstruction. Evaluating 3,960 brain MRI test cases, we find that increasing wireless compression from 4-fold to 8-fold causes deep learning models to silently erase acute strokes in 18.2 percent to 28.8 percent of cases. Yet, conventional network QoS metrics report an almost unchanged PSNR (a negligible 0.016 dB difference) and high SSIM above 0.86. These results show that tele-radiology networks cannot ensure diagnostic preservation using traditional pixel-averaged metrics alone, and motivate diagnostic-aware edge streaming protocols.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -40,9 +40,9 @@ Tele-radiology, Internet of Medical Things (IoMT), Edge AI, Deep Learning Recons
 
 In emergency neurology, ``time is brain.'' For acute ischemic stroke, two million neurons die each minute that recanalization is delayed \cite{fassbender2017mobile}. Mobile Stroke Units (MSUs) equipped with onboard MRI perform pre-hospital triage \cite{lang2024ultrafast}, but definitive treatment requires real-time consultation with hospital neuroradiologists over cellular (5G/4G) or satellite uplinks \cite{al2020internet}.
 
-The communication bottleneck is raw payload volume. A full-diagnostic multi-coil brain MRI scan consists of spatial frequency data ($k$-space) across 12 to 32 receiver antenna coils, frequently exceeding 200--500\,MB per acquisition \cite{zbontar2018fastmri}. Over fluctuating cellular channels (e.g., 15--30\,Mbps 5G/4G uplinks in a moving ambulance \cite{hossain20205g}), transmitting raw $k$-space requires 80--160\,s, violating acute stroke triage deadlines. Standard post-acquisition compression (e.g., JPEG-2000/JPIP or H.265) cannot resolve this bottleneck: it does not reduce physical scanner acquisition time, and low-power mobile ambulances lack high-end GPU clusters for onboard deep reconstruction \cite{wang2020convergence}. Consequently, tele-radiology systems apply in-transit subsampling ($R = 4, 6, 8$), slashing transmitted payload by $75\%$ to $87.5\%$ (37.5\,MB at $R=8$, transmitted in 10--20\,s) \cite{chundugari2024teleradiology}. Unacquired frequencies are reconstructed remotely at hospital edge servers using deep neural networks (such as End-to-End Variational Networks \cite{sriram2020endtoend}) or parallel imaging \cite{pruessmann1999sense}.
+The communication bottleneck is raw payload volume. A full-diagnostic multi-coil brain MRI scan consists of spatial frequency data ($k$-space) across 12 to 32 receiver antenna coils, frequently exceeding 200--500\,MB per acquisition \cite{zbontar2018fastmri}. Over fluctuating cellular channels (e.g., 15--30\,Mbps 5G/4G uplinks in a moving ambulance \cite{hossain20205g}), transmitting raw $k$-space requires 80--160\,s, violating acute stroke triage deadlines. Standard post-acquisition compression (e.g., JPEG-2000/JPIP or H.265) cannot resolve this bottleneck: it does not reduce physical scanner acquisition time, and low-power mobile ambulances lack high-end GPU clusters for onboard deep reconstruction \cite{wang2020convergence}. Operationally, in emergency Mobile Stroke Units, acceleration factor $R$ represents scanner-side undersampled acquisition (shortening physical acquisition time to $<90\,$s \cite{lang2024ultrafast}) which directly produces an in-transit compressed $k$-space stream ($R = 4, 6, 8$), slashing transmitted wireless payload by $75\%$ to $87.5\%$ (37.5\,MB at $R=8$, transmitted in 10--20\,s) \cite{chundugari2024teleradiology}. Unacquired frequencies are reconstructed remotely at hospital edge servers using deep neural networks (such as End-to-End Variational Networks \cite{sriram2020endtoend}) or parallel imaging \cite{pruessmann1999sense}.
 
-In telecommunications, rate-distortion optimization (RDO) balances transmission throughput against signal fidelity using global distortion metrics: Mean Squared Error (MSE), Peak Signal-to-Noise Ratio (PSNR), and Structural Similarity (SSIM) \cite{wang2004image}. However, deep learning models trained on pixel-averaged $\ell_2$/MSE loss suffer from a fundamental incentive misalignment: replacing a small, high-contrast pathology with smooth background tissue actively reduces whole-image loss, leading to catastrophic feature erasure \cite{antun2020instabilities,bhadra2021hallucinations}. A systematic review across 263 studies showed that $>71\%$ of deep learning models evaluate solely on pixel averages, leaving diagnostic safety unmeasured \cite{mai2026metric}.
+In telecommunications, rate-distortion optimization (RDO) balances transmission throughput against signal fidelity using global distortion metrics: Mean Squared Error (MSE), Peak Signal-to-Noise Ratio (PSNR), and Structural Similarity (SSIM) \cite{wang2004image}. However, deep learning models trained on pixel-averaged $\ell_2$/MSE loss suffer from a fundamental incentive misalignment: replacing a small, high-contrast pathology with smooth background tissue actively reduces whole-image loss, leading to severe feature erasure \cite{antun2020instabilities,bhadra2021hallucinations}. A systematic review across 263 studies showed that $>71\%$ of deep learning models evaluate solely on pixel averages, leaving diagnostic safety unmeasured \cite{mai2026metric}.
 
 \begin{figure*}[t]
 \centering
@@ -51,14 +51,14 @@ In telecommunications, rate-distortion optimization (RDO) balances transmission 
 \label{fig:dual_blindspot}
 \end{figure*}
 
-In this paper, we demonstrate that this evaluation paradigm creates a catastrophic \textbf{QoS Illusion in Tele-Radiology}. Because acute lacunar strokes occupy only a tiny fraction of the brain (often $<50$ voxels), their erasure barely registers in whole-image averages. We prove analytically and empirically that:
+In this paper, we demonstrate that this evaluation paradigm creates a dangerous \textbf{QoS Illusion in Tele-Radiology}. Because acute lacunar strokes occupy only a tiny fraction of the brain (often $<50$ voxels), their erasure barely registers in whole-image averages. We prove analytically and empirically that:
 \begin{enumerate}
     \item \textbf{Image-Domain Blindness:} Standard metrics (PSNR, SSIM) spatially average errors across millions of pixels. Erasing an acute $100\,\text{mm}^3$ stroke outright shifts global PSNR by $<0.03\,\text{dB}$---completely lost in telemetry noise.
     \item \textbf{Measurement-Domain Invariance:} Data-consistency gates are blind to the operator's numerical null space. An erased lesion alters residuals by $<10^{-8}$, well below scanner thermal noise.
     \item \textbf{The Rate-Distortion Hazard:} Through $3{,}960$ physical audits, escalating compression from $R=4$ to $R=8$ drives stroke silent erasure from $18.2\%$ to $28.8\%$, while network PSNR shifts by only $0.016\,\text{dB}$.
 \end{enumerate}
 
-To resolve this crisis, we introduce the Causal Safety Audit (CSA) for tele-radiology networks, replacing blind pixel fidelity with a task-based Channelised Hotelling Observer (CHO) that mathematically models human clinical visual perception.
+To resolve this crisis, we introduce the Causal Safety Audit (CSA) for tele-radiology networks, replacing blind pixel fidelity with a task-based Channelised Hotelling Observer (CHO) as an objective mathematical surrogate for human clinical visual perception.
 
 \section{The Dual Mechanism of the QoS Illusion}
 \label{sec:theory}
@@ -68,7 +68,7 @@ We formalize the acquisition and transmission pipeline as a linear inverse probl
 \mathbf{Y} = \mathbf{A}\mathbf{X} + \boldsymbol{\eta} = \mathcal{M} \mathcal{F} \mathcal{S} \mathbf{X} + \boldsymbol{\eta}
 \label{eq:forward}
 \end{equation}
-where $\mathcal{S}$ represents multi-channel receiver coil sensitivity profiles, $\mathcal{F}$ is the 2D spatial Fourier transform, $\mathcal{M}$ is the wireless subsampling mask operating at compression factor $R$, and $\boldsymbol{\eta} \sim \mathcal{CN}(0, \sigma_\eta^2 \mathbf{I})$ is zero-mean complex Gaussian thermal noise. Physically, patient image $\mathbf{X}$ is weighted by antenna profiles $\mathcal{S}$, mapped to the spatial frequency domain by $\mathcal{F}$, and downsampled by transmission mask $\mathcal{M}$.
+where $\mathcal{S}$ represents multi-channel receiver coil sensitivity profiles, $\mathcal{F}$ is the 2D spatial Fourier transform, $\mathcal{M}$ is the wireless subsampling mask operating at compression factor $R$, and $\boldsymbol{\eta} \sim \mathcal{CN}(0, \sigma_\eta^2 \mathbf{I})$ is zero-mean complex Gaussian thermal noise. Physically, patient image $\mathbf{X}$ is weighted by antenna profiles $\mathcal{S}$, mapped to the spatial frequency domain by $\mathcal{F}$, and acquired under subsampling mask $\mathcal{M}$ where only $M = N/R$ phase-encodings are collected at the scanner and streamed over the cellular uplink.
 
 \subsection{The Image-Domain Spatial Averaging Mechanism}
 When image $\hat{\mathbf{X}}$ is reconstructed at the hospital edge receiver, network rate-distortion algorithms evaluate quality via Mean Squared Error $\text{MSE} = \frac{1}{N}\|\hat{\mathbf{X}} - \mathbf{X}\|_2^2$ and PSNR $= 10\log_{10}(\text{MAX}^2/\text{MSE})$.
@@ -84,7 +84,7 @@ When image $\hat{\mathbf{X}}$ is reconstructed at the hospital edge receiver, ne
 \begin{equation*}
 |\Delta\text{PSNR}| = 10\log_{10}(1 + 2.5\times 10^{-5} \times 99) \approx 0.0107\,\text{dB}
 \end{equation*}
-Because the large local omission error is diluted across 1.64 million background voxels, wiping out the stroke outright produces an imperceptible $0.01\,\text{dB}$ shift. Standard telecommunication reporting rounds PSNR to one or two decimal places, rendering fatal diagnostic omissions completely invisible to network operators (Fig.~\ref{fig:dual_blindspot}b).
+Because the large local omission error is diluted across 1.64 million background voxels, wiping out the stroke outright produces an imperceptible $0.01\,\text{dB}$ shift. Standard telecommunication reporting rounds PSNR to one or two decimal places, rendering severe diagnostic omissions completely invisible to network operators (Fig.~\ref{fig:dual_blindspot}b).
 
 \subsection{The Measurement-Domain Null-Space Invariance}
 To verify transmission integrity without ground truth, network protocols enforce physical data consistency by verifying the residual $\|\mathbf{A}\hat{\mathbf{X}} - \mathbf{Y}\|_2 \le \tau_{\text{res}}$.
@@ -96,7 +96,7 @@ To verify transmission integrity without ground truth, network protocols enforce
 \end{equation}
 Specifically, for purely unacquired frequencies $\boldsymbol{\delta}_{\mathcal{N}}$, the residual change is identically zero.
 
-\textit{Physical Intuition:} In wireless systems, an edge receiver cannot verify frequency bands that were never transmitted. When multi-coil acquisitions have non-ideal sensitivities and thermal noise $\sigma_\eta$, the effective numerical null space contains all components with $\sigma_i < \sigma_\eta$. As shown in Fig.~\ref{fig:dual_blindspot}c, perturbations residing in this subspace alter measurement residuals by less than scanner thermal noise, allowing fatal diagnostic omissions to pass network edge consistency checks completely undetected.
+\textit{Physical Intuition:} In wireless systems, an edge receiver cannot verify frequency bands that were never transmitted. When multi-coil acquisitions have non-ideal sensitivities and thermal noise $\sigma_\eta$, the effective numerical null space contains all components with $\sigma_i < \sigma_\eta$. As shown in Fig.~\ref{fig:dual_blindspot}c, perturbations residing in this subspace alter measurement residuals by less than scanner thermal noise, allowing critical diagnostic omissions to pass network edge consistency checks completely undetected.
 
 \section{The Causal Safety Audit Protocol}
 \label{sec:method}
@@ -117,7 +117,7 @@ Automated tele-radiology QoS requires an objective detection metric rather than 
 d' = \frac{\mathbf{w}^T \Delta\bar{\mathbf{v}}}{\sqrt{\mathbf{w}^T \mathbf{K} \mathbf{w}}} = \sqrt{\Delta\bar{\mathbf{v}}^T \mathbf{K}^{-1} \Delta\bar{\mathbf{v}}}
 \label{eq:dprime}
 \end{equation}
-Standardizing $d'$ gives decision score $z_{\text{recon}}$, where $z_{\text{recon}} \ge 1.5$ guarantees Area Under the ROC Curve ($\text{AUC}$) $> 0.85$ (reliable clinical detection), while $z_{\text{recon}} < 1.5$ indicates the stroke has dissolved beneath background noise.
+Standardizing $d'$ gives decision score $z_{\text{recon}}$, where $z_{\text{recon}} \ge 1.5$ corresponds to Area Under the ROC Curve ($\text{AUC}$) $\ge 0.85$ (reliable task detectability), while $z_{\text{recon}} < 1.5$ indicates the stroke has dissolved beneath background noise. Here, the CHO acts as an objective mathematical surrogate for human visual detectability in medical imaging \cite{barrett1993model}; multi-radiologist reader studies represent valuable complementary clinical trials.
 
 \subsection{Silent Erasure Definition}
 We define \textbf{Silent Erasure} as the failure mode where network transmission destroys clinical detectability while reporting normal network QoS:
@@ -138,7 +138,7 @@ where $z_{\text{crit}} = 1.5$ is the calibrated diagnostic threshold and $\epsil
 \label{sec:results}
 
 \subsection{Dataset and Experimental Setup}
-We evaluated our framework on the NYU fastMRI multi-coil brain benchmark \cite{zbontar2018fastmri} (clinical 3T T1, T2, and FLAIR scans with 16- and 20-channel head arrays). We evaluated $3{,}960$ counterfactual pairs across: (1)~\textbf{Acceleration:} $R \in \{4, 6, 8\}$, transmitting only $25\%$, $16.7\%$, and $12.5\%$ of data ($75\%$ to $87.5\%$ payload savings); (2)~\textbf{Lesion volumes:} $V \in \{10, 27, 64, 100, 200\}\,\text{mm}^3$, spanning tiny micro-infarcts ($10\,\text{mm}^3 \approx 2.7\,\text{mm}$ diameter) to acute lacunar strokes ($64\,\text{mm}^3 \approx 5.0\,\text{mm}$) and confluent subcortical lesions ($200\,\text{mm}^3$); (3)~\textbf{Contrast ratios:} $C \in \{0.24, 1.0, 1.5\}$ (FLAIR) and $\{-0.21, -0.6, -1.0\}$ (T1); and (4)~\textbf{Reconstruction baselines:} parallel imaging (CG-SENSE \cite{pruessmann1999sense}) and deep variational networks (VarNet \cite{sriram2020endtoend}). Test code: \url{https://github.com/dmai287/tele-radiology-blindspot}.
+We evaluated our framework on the NYU fastMRI multi-coil brain benchmark \cite{zbontar2018fastmri} (clinical 3T T1 and FLAIR acquisitions with 16- and 20-channel head arrays). The dataset comprises $3{,}960$ counterfactual evaluation pairs generated across 22 independent patient scans (11 AXFLAIR, 11 AXT1) over 7 clinical slice positions ($N=264$ balanced pairs per volume-acceleration cell). Evaluations span: (1)~\textbf{Acceleration factor:} $R \in \{4, 6, 8\}$, transmitting only $25\%$, $16.7\%$, and $12.5\%$ of data ($75\%$ to $87.5\%$ payload savings); (2)~\textbf{Lesion volumes:} $V \in \{10, 27, 64, 100, 200\}\,\text{mm}^3$, spanning tiny micro-infarcts ($10\,\text{mm}^3 \approx 2.7\,\text{mm}$ diameter) to acute lacunar strokes ($64\,\text{mm}^3 \approx 5.0\,\text{mm}$) and confluent subcortical lesions ($200\,\text{mm}^3$); (3)~\textbf{Contrast ratios:} $C \in \{0.24, 1.0, 1.5\}$ (FLAIR) and $\{-0.21, -0.6, -1.0\}$ (T1); and (4)~\textbf{Reconstruction baselines:} parallel imaging (CG-SENSE \cite{pruessmann1999sense}) and deep variational networks (VarNet \cite{sriram2020endtoend}). Test code: \url{https://github.com/dmai287/tele-radiology-blindspot}.
 
 \subsection{Rate-Distortion vs. Silent Erasure Trade-Off}
 Table~\ref{tab:rate_distortion} and Fig.~\ref{fig:network_rd} demonstrate the dangerous divergence between network-level QoS metrics and diagnostic patient safety.
@@ -147,37 +147,34 @@ Under standard rate-distortion optimization (Fig.~\ref{fig:network_rd}a), high c
 
 \begin{table}[t]
 \centering
-\caption{Rate-Distortion vs. Diagnostic Safety Across Acceleration Factors ($3{,}960$ Test Units).}
+\caption{Rate-Distortion vs. Diagnostic Safety: Conventional vs. Proposed DARDO ($3{,}960$ Test Pairs Across 22 Patient Scans).}
 \label{tab:rate_distortion}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.05}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lcccc@{}}
 \toprule
 \textbf{Evaluation Metric} & \textbf{$R=4$} & \textbf{$R=6$} & \textbf{$R=8$} & \textbf{Network QoS} \\
 \midrule
-Payload Savings & $-75.0\%$ & $-83.3\%$ & $-87.5\%$ & Massive gain \\
+Payload Savings & $-75.0\%$ & $-83.3\%$ & $-87.5\%$ & Major saving \\
 Global PSNR (dB) & $29.46$ & $27.23$ & $25.30$ & High ($>25\,$dB) \\
 Global SSIM & $0.866$ & $0.866$ & $0.866$ & Intact ($>0.86$) \\
-$\Delta\text{PSNR}$ Shift & $0.015\,$dB & $0.017\,$dB & $0.016\,$dB & \textbf{Imperceptible} \\
+$\Delta\text{PSNR}$ Shift & $0.015\,$dB & $0.017\,$dB & $0.016\,$dB & Imperceptible \\
 \midrule
-\multicolumn{5}{l}{\textit{Silent Pathology Erasure Rate by Lesion Volume:}} \\
-$V = 10\,\text{mm}^3$ & $7.95\%$ & $7.95\%$ & $11.74\%$ & Sub-threshold \\
-$V = 27\,\text{mm}^3$ & $7.20\%$ & $9.09\%$ & $10.98\%$ & Moderate loss \\
-$\mathbf{V = 64\,\text{mm}^3}$ & $\mathbf{18.18\%}$ & $\mathbf{23.48\%}$ & $\mathbf{28.79\%}$ & \textbf{Severe stroke loss} \\
-$V = 100\,\text{mm}^3$ & $13.26\%$ & $15.53\%$ & $15.91\%$ & High omission \\
-$V = 200\,\text{mm}^3$ & $16.67\%$ & $18.18\%$ & $19.70\%$ & Severe omission \\
+\multicolumn{5}{l}{\textit{Silent Pathology Erasure: Conventional / Proposed DARDO:}} \\
+$V = 10\,\text{mm}^3$ (Micro) & $7.95\%$ & $7.95\%$ & $11.7\% / 15.2\%$ & Capacity trade-off \\
+$V = 27\,\text{mm}^3$ (Focal) & $7.20\%$ & $9.09\%$ & $11.0\% / \mathbf{5.7\%}$ & $1.9\times$ drop \\
+$\mathbf{V = 64\,\text{mm}^3}$ \textbf{(Stroke)} & $\mathbf{18.2\%}$ & $\mathbf{23.5\%}$ & $\mathbf{28.8\% / 1.9\%}$ & $\mathbf{15.2\times\text{ drop}}$ \\
+$V = 100\,\text{mm}^3$ & $13.3\%$ & $15.5\%$ & $15.9\% / \mathbf{0.0\%}$ & Protected \\
+$V = 200\,\text{mm}^3$ & $16.7\%$ & $18.2\%$ & $19.7\% / \mathbf{0.0\%}$ & Protected \\
+\midrule
+\textbf{Mean Erasure} & $12.7\%$ & $14.9\%$ & $\mathbf{17.4\% / 4.6\%}$ & $\mathbf{3.8\times\text{ drop}}$ \\
+Mean $z_{\text{recon}}$ & $1.74$ & $1.41$ & $1.05 / \mathbf{2.19}$ & Safe ($z \ge 1.5$) \\
 \bottomrule
 \end{tabular*}
 \end{table}
 
-However, task-based diagnostic integrity collapses (Fig.~\ref{fig:network_rd}b--c):
-\begin{itemize}
-    \item For acute lacunar strokes ($64\,\text{mm}^3$), silent erasure escalates from $18.18\%$ at $R=4$ to $23.48\%$ at $R=6$, reaching $\mathbf{28.79\%}$ at $R=8$. Nearly one in three acute strokes is silently wiped out.
-    \item Yet, the global PSNR shift for these erased $64\,\text{mm}^3$ strokes is a minuscule $0.016\,\text{dB}$---completely buried in numerical noise.
-    \item Task detectability $z_{\text{recon}}$ drops from $1.74$ at $R=4$ down to $1.05$ at $R=8$ (Fig.~\ref{fig:network_rd}b), falling well below clinical safety ($z_{\text{crit}} = 1.5$).
-\end{itemize}
-End-to-end latency at $R=8$ finishes in $<105\,$s (scan: $90\,$s; 5G uplink at $30\,\text{Mbps}$: $10\,$s; edge reconstruction: $1.8\,$s; CHO audit: $12\,\text{ms}$), yet silent erasure makes this transmission clinically hazardous.
+However, diagnostic integrity collapses under conventional transmission, whereas DARDO provides decisive protection (Table~\ref{tab:rate_distortion}, Fig.~\ref{fig:network_rd}): (1)~\textbf{Acute Stroke Loss:} for $64\,\text{mm}^3$ acute lacunar strokes ($N=264$), conventional compression drives silent erasure from $18.18\%$ ($R=4$) to $\mathbf{28.79\%}$ ($R=8$, $95\%\text{ CI: } [23.3\%, 34.2\%]$), wiping out nearly one in three strokes while shifting PSNR by only $0.016\,$dB; (2)~\textbf{DARDO Protection:} DARDO slashes $R=8$ acute stroke erasure to $\mathbf{1.89\%}$ ($95\%\text{ CI: } [0.25\%, 3.53\%]$)---a $\mathbf{15.2\times}$ reduction under identical $87.5\%$ bandwidth savings---and completely eliminates acute stroke erasure at $R=4, 6$ ($0.00\%$); and (3)~\textbf{Global Preservation:} across all volumes at $R=8$, DARDO lowers mean erasure from $17.42\%$ to $\mathbf{4.55\%}$ ($95\%\text{ CI: } [3.4\%, 5.7\%]$), restoring mean detectability from $z=1.05$ to $z=2.19$ ($>1.5$). Total latency completes in $<105\,$s (scan: $90\,$s, uplink: $10\,$s, VarNet: $1.8\,$s, CHO: $12\,\text{ms}$), confirming that DARDO restores diagnostic reliability within emergency triage windows.
 
 \subsection{Physical Residual Invariance Verification}
 To confirm Proposition 2, Table~\ref{tab:nullspace} evaluates measurement residuals across clinical brain slices under $R=8$ compression.
@@ -190,7 +187,7 @@ Across all evaluated slices, inserting focal lesions produced relative edits up 
 \label{tab:nullspace}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
-\renewcommand{\arraystretch}{1.15}
+\renewcommand{\arraystretch}{1.08}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lcccc@{}}
 \toprule
 \textbf{Scan Acquisition} & \textbf{Volume} & \textbf{Edit Norm} & \textbf{$\Delta$ Residual} & \textbf{Gate Status} \\
@@ -206,7 +203,7 @@ T1\_202\_00591 & $100\,\text{mm}^3$ & $0.80\%$ & $7.65 \times 10^{-8}$ & PASSED 
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.98\textwidth]{figures/fig6_qualitative_case_study.pdf}
+\includegraphics[width=0.95\textwidth]{figures/fig6_qualitative_case_study.pdf}
 \caption{Qualitative visual demonstration of silent focal stroke erasure under aggressive $8\times$ network undersampling. (a) Fully sampled ground-truth brain scan containing an acute $5.8\,\text{mm}$ ($100\,\text{mm}^3$) focal stroke. (b) Classical linear reconstruction ($\ell_1$-ESPIRiT, $R=8$) retains the stroke despite noise amplification. (c) Reconstruction with a learned prior ($R=8$) silently suppresses the stroke into smooth, false-normal white matter. (d) Error transfer difference map $\Delta\hat{\mathbf{X}}$ reveals an isolated energy hole confined to the lesion. (e) Raw data-consistency residual $\|\mathbf{A}\hat{\mathbf{X}} - \mathbf{Y}\|_2$ contains only Gaussian thermal noise, causing network edge verification gates to pass the corrupted scan without detection.}
 \label{fig:case_study}
 \end{figure*}
@@ -217,7 +214,7 @@ Fig.~\ref{fig:case_study} illustrates this paradox on a clinical scan. In the re
 \section{Proposed 4-Layer Tele-Radiology Architecture}
 \label{sec:architecture}
 
-To systematically resolve the QoS Illusion, tele-radiology networks must move beyond monolithic pixel-distortion metrics. We propose a full-stack, 4-layer diagnostic-aware communication architecture spanning source perception, compression, radio access, and transport semantics (Fig.~\ref{fig:architecture} and Table~\ref{tab:comparison}): (1)~\textbf{Layer 1 (Perception \& Audit):} embeds the Causal Safety Audit (CSA) directly into transmission pre-checks, replacing uniform pixel distortion with the task-based Channelised Hotelling Observer (CHO); (2)~\textbf{Layer 2 (Diagnostic Compression):} introduces Diagnostic-Aware Rate-Distortion Optimization (DARDO), allocating bits strictly proportional to diagnostic spectral density; (3)~\textbf{Layer 3 (5G RAN Slicing):} enforces differentiated QoS scheduling, routing mission-critical stroke frequencies over 5G URLLC slices while passing background anatomy over standard eMBB; and (4)~\textbf{Layer 4 (Transport \& Semantic Verification):} deploys lightweight 128-byte semantic tokens in QUIC headers, enabling targeted Selective Negative Acknowledgment (S-NACK) retransmissions for missing diagnostic frequencies.
+To systematically resolve the QoS Illusion, tele-radiology networks must move beyond monolithic pixel-distortion metrics. We propose a 4-layer diagnostic-aware communication architecture spanning perception, compression, radio access, and transport semantics (Fig.~\ref{fig:architecture}, Table~\ref{tab:comparison}): (1)~\textbf{Layer 1 (Perception \& Audit):} embeds the Causal Safety Audit (CSA) into transmission pre-checks via task-based CHO; (2)~\textbf{Layer 2 (Diagnostic Compression):} introduces DARDO, allocating bits proportional to diagnostic spectral density; (3)~\textbf{Layer 3 (5G RAN Slicing):} routes mission-critical stroke frequencies over 5G URLLC slices while passing background anatomy over eMBB; and (4)~\textbf{Layer 4 (Semantic Transport):} deploys 128-byte semantic tokens in QUIC headers, enabling targeted S-NACK retransmissions for missing stroke frequencies.
 
 \begin{table}[t]
 \centering
@@ -225,7 +222,7 @@ To systematically resolve the QoS Illusion, tele-radiology networks must move be
 \label{tab:comparison}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
-\renewcommand{\arraystretch}{1.12}
+\renewcommand{\arraystretch}{1.04}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}p{2.35cm}cc@{}}
 \toprule
 \textbf{Protocol Dimension} & \textbf{Conventional Tele-Rad.} & \textbf{Proposed Framework} \\
@@ -236,10 +233,10 @@ Compression Factor & $R = 8$ ($87.5\%$ savings) & $R = 8$ ($87.5\%$ savings) \\
 Acute Stroke Erasure & $\mathbf{28.79\%}$ (Clinical Hazard) & $\mathbf{1.89\%}$ ($15.2\times$ reduction) \\
 Mean Metric Shift & $|\Delta\text{PSNR}| = 0.016\,$dB & Verified $z_{\text{recon}} \ge 1.5$ \\
 Wireless RAN Policy & Best-Effort (eMBB) & 5G URLLC (QCI 1/65) \\
-Fading Loss Immunity & Vulnerable to drops & Guaranteed BLER $< 10^{-5}$ \\
+Radio Reliability Target & Best-effort packet drops & 3GPP Target BLER $< 10^{-5}$ \\
 Transport Verification & None (blind decode) & 128-B Semantic Token \\
 Retransmission Policy & Full Volume ($>200\,$MB) & Targeted S-NACK ($\Delta k$) \\
-Total Triage Latency & $<105\,$s (unreliable) & $<105\,$s (guaranteed safe) \\
+Total Triage Latency & $<105\,$s (unreliable) & $<105\,$s (Verified $z \ge 1.5$) \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -257,29 +254,29 @@ To solve (\ref{eq:dardo}) in real time on mobile edge hardware without intractab
 \gamma_k = \sum_{y} W(k, y) \|\mathcal{F}\mathcal{S}_k\|_2
 \label{eq:gamma}
 \end{equation}
-where $\mathcal{S}_k$ represents receiver coil sensitivities; and (3)~\textbf{Greedy Line Allocation:} seed sampling mask $\mathcal{M}$ with autocalibration center lines and iteratively insert trajectories maximizing $\gamma_k$ until $d'_{\text{CHO}}(\mathcal{M}) \ge 1.5$. Because $W$ is pre-calculated offline, trajectory sorting executes in $\mathcal{O}(M\log M)$ time ($<2\,\text{ms}$ on mobile edge CPUs). Across all $3{,}960$ test units at $R=8$ (Table~\ref{tab:comparison}), DARDO elevates mean detectability from $z=1.12$ to $z=2.19$ and slashes acute stroke silent erasure from $28.79\%$ down to $1.89\%$ ($15.2\times$ reduction, $<4.55\%$ mean across all volumes). At $R=4$ and $R=6$, stroke erasure is completely eliminated ($0.00\%$) while micro-infarct ($V=10\,\text{mm}^3$) omissions drop from $7.95\%$ to $0.00\%$ and $3.41\%$. Under extreme $R=8$ ($87.5\%$ compression), finite capacity dictates an inevitable Pareto trade-off: DARDO strictly protects decisive acute strokes ($64\,\text{mm}^3$), while sub-clinical micro-infarcts ($15.15\%$) remain protected by Layer~4 targeted S-NACK ($\sim 15\,\text{ms}$) without violating triage deadlines.
+where $\mathcal{S}_k$ represents receiver coil sensitivities; and (3)~\textbf{Greedy Line Allocation:} seed sampling mask $\mathcal{M}$ with autocalibration center lines and iteratively insert trajectories maximizing $\gamma_k$ until $d'_{\text{CHO}}(\mathcal{M}) \ge 1.5$. Because $W$ is pre-calculated offline, trajectory sorting executes in $\mathcal{O}(M\log M)$ time ($<2\,\text{ms}$ on mobile edge CPUs). As established in Table~\ref{tab:rate_distortion}, DARDO slashes acute stroke erasure to $1.89\%$ at $R=8$ ($15.2\times$ reduction, $<4.55\%$ mean across all volumes), eliminating stroke erasure entirely at $R=4, 6$. Under extreme $87.5\%$ compression ($R=8$), finite capacity dictates a Pareto trade-off: DARDO strictly protects decisive acute strokes ($64\,\text{mm}^3$), while sub-clinical micro-infarcts ($15.15\%$) remain protected by Layer~4 targeted S-NACK ($\sim 15\,\text{ms}$) without violating triage deadlines.
 
 \subsection{5G URLLC Slicing \& Prioritized Scheduling}
-Mobile Stroke Units face unpredictable cellular channel fading, shadowing, and handovers. Under uniform single-carrier streaming (e.g., DASH), dropped packet bursts in high-frequency stroke bands cause edge AI to reconstruct smooth false-normal brain tissue. Under our Layer 3 protocol, the transmitter dynamically tags packets by diagnostic utility: (1)~\textbf{Critical Slice (5G URLLC):} packets carrying high-utility lines ($\gamma_k \ge \tau$) are mapped to 5G QCI 1/65 (URLLC), where the scheduler guarantees Block Error Rate (BLER) $<10^{-5}$ and sub-10 ms latency; and (2)~\textbf{Bulk Slice (5G eMBB):} lines carrying low diagnostic density ($\gamma_k < \tau$) stream over best-effort eMBB slices, absorbing transient network congestion without risking diagnostic integrity.
+Mobile Stroke Units face unpredictable cellular channel fading, shadowing, and handovers. Under uniform single-carrier streaming (e.g., DASH), dropped packet bursts in high-frequency stroke bands cause edge AI to reconstruct smooth false-normal brain tissue. Under our Layer 3 protocol, the transmitter dynamically tags packets by diagnostic utility: (1)~\textbf{Critical Slice (5G URLLC):} packets carrying high-utility lines ($\gamma_k \ge \tau$) are mapped to 5G QCI 1/65 (URLLC), where the radio scheduler targets Block Error Rate (BLER) $<10^{-5}$ and sub-10 ms latency under 3GPP Rel-16 URLLC specifications; and (2)~\textbf{Bulk Slice (5G eMBB):} lines carrying low diagnostic density ($\gamma_k < \tau$) stream over best-effort eMBB slices, absorbing transient network congestion without risking diagnostic integrity.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.92\textwidth]{figures/fig4_architecture.pdf}
+\includegraphics[width=0.85\textwidth]{figures/fig4_architecture.pdf}
 \caption{The Proposed 4-Layer Diagnostic-Aware Tele-Radiology Architecture. Layer 1 embeds the Causal Safety Audit (CSA); Layer 2 optimizes source compression via DARDO; Layer 3 enforces 5G URLLC slicing for critical stroke bands; Layer 4 closes the loop via 128-byte semantic tokens and targeted S-NACK retransmissions.}
 \label{fig:architecture}
 \end{figure*}
 
 \subsection{Task-Based Semantic Tokens \& Closed-Loop S-NACK}
-In 6G semantic communications \cite{zhang2022semantic}, decoders verify diagnostic meaning rather than syntactic bit identity. The mobile ambulance AI embeds a compact 128-byte semantic pathology token (Gabor filter responses $\mathbf{v}$ and ROI coordinates) into the QUIC/RTP transport header. Upon edge reconstruction via VarNet \cite{sriram2020endtoend} ($<15\,\text{ms}$), if detectability falls below $z_{\text{recon}} < 1.5$, the transport layer issues a targeted \textbf{Selective Negative Acknowledgment (S-NACK)}. Rather than retransmitting the full raw volume ($>200\,$MB) and violating triage deadlines, the S-NACK requests only the missing high-$\gamma_k$ trajectories ($\Delta k \approx 1.2\,\text{MB}$), restoring detectability over the URLLC slice in $\approx 15\,\text{ms}$.
+In 6G semantic communications \cite{zhang2022semantic}, decoders verify diagnostic meaning rather than syntactic bit identity. To audit transmission fidelity in blind clinical settings without ground-truth labels, the transmitter embeds a 128-byte semantic probe into the QUIC/RTP header, containing pre-computed Gabor responses $\mathbf{v}$ and suspicious vascular coordinates from pre-hospital scout scans. If edge VarNet reconstruction \cite{sriram2020endtoend} yields $z_{\text{recon}} < 1.5$, a targeted \textbf{Selective Negative Acknowledgment (S-NACK)} issues over the URLLC slice. Rather than retransmitting the full volume ($>200\,$MB), S-NACK requests only the missing high-$\gamma_k$ bands ($\Delta k \approx 1.2\,\text{MB}$), restoring detectability in $\approx 15\,\text{ms}$.
 
 \subsection{End-to-End Latency Budget Analysis}
-Within the 60-minute stroke ``golden hour'', pre-hospital triage requires scan-to-decision time within $<105\,$s \cite{fassbender2017mobile,lang2024ultrafast}. We analyze the end-to-end latency of our framework at $R=8$ ($37.5\,$MB payload over a $30\,\text{Mbps}$ 5G uplink): (1)~ultra-fast MRI acquisition: $90.0\,\text{s}$ \cite{lang2024ultrafast}; (2)~DARDO trajectory sorting: $1.8\,\text{ms}$; (3)~5G uplink streaming: $10.0\,\text{s}$; (4)~hospital VarNet GPU reconstruction: $1.8\,\text{s}$; (5)~CHO semantic verification: $12.0\,\text{ms}$; and (6)~worst-case S-NACK retransmission: $15.0\,\text{ms}$. Total latency completes in $\mathbf{101.83\,\text{s}} < 105.0\,\text{s}$, verifying that our protocol guarantees clinical safety within emergency deadlines.
+Within the 60-minute stroke ``golden hour'', triage requires scan-to-decision time within $<105\,$s \cite{fassbender2017mobile,lang2024ultrafast}. We analyze end-to-end latency at $R=8$ ($37.5\,$MB over $30\,\text{Mbps}$ 5G): (1)~ultra-fast scan: $90.0\,\text{s}$ \cite{lang2024ultrafast}; (2)~DARDO sorting: $1.8\,\text{ms}$; (3)~5G uplink: $10.0\,\text{s}$; (4)~VarNet GPU recon: $1.8\,\text{s}$; (5)~CHO audit: $12.0\,\text{ms}$; and (6)~worst-case S-NACK: $15.0\,\text{ms}$. Total latency finishes in $\mathbf{101.83\,\text{s}} < 105.0\,\text{s}$, verifying that our framework satisfies task-based detectability within emergency deadlines.
 
 \balance
 \section{Conclusion}
 \label{sec:conclusion}
 
-In this paper, we exposed the QoS Illusion in tele-radiology: standard rate-distortion metrics (PSNR, SSIM) and data-consistency gates fail to detect catastrophic diagnostic omissions under network bandwidth compression. We proved mathematically that erasing an acute $100\,\text{mm}^3$ stroke shifts PSNR by $<0.03\,\text{dB}$ and alters raw residuals by $<10^{-8}$, completely lost in channel and thermal noise. Evaluating $3{,}960$ fastMRI counterfactual pairs revealed that escalating wireless compression from $4\times$ to $8\times$ drives silent stroke erasure from $18.2\%$ to $28.8\%$, invisible to conventional QoS monitors. To resolve this hazard, we proposed a 4-layer diagnostic-aware architecture integrating task-based model observers, DARDO compression, 5G URLLC network slicing, and closed-loop semantic tokens. Our framework slashes acute stroke erasure from $28.8\%$ down to $1.89\%$ ($15.2\times$ reduction) under identical $87.5\%$ payload savings in $101.8\,$s, establishing a rigorous foundation for safe, life-critical mobile e-health streaming.
+In this paper, we exposed the QoS Illusion in tele-radiology: standard rate-distortion metrics (PSNR, SSIM) and data-consistency gates fail to detect catastrophic diagnostic omissions under network bandwidth compression. We proved mathematically that erasing an acute $100\,\text{mm}^3$ stroke shifts PSNR by $<0.03\,\text{dB}$ and alters residuals by $<10^{-8}$, lost in thermal noise. Evaluating $3{,}960$ fastMRI counterfactual pairs revealed that escalating compression from $4\times$ to $8\times$ drives silent stroke erasure from $18.2\%$ to $28.8\%$, invisible to conventional QoS monitors. To resolve this hazard, we proposed a 4-layer diagnostic-aware architecture integrating task observers, DARDO compression, 5G URLLC slicing, and closed-loop semantic tokens. Our framework slashes acute stroke erasure from $28.8\%$ down to $1.89\%$ ($15.2\times$ reduction) under identical $87.5\%$ payload savings in $101.8\,$s, providing a rigorous foundation for diagnostic-aware mobile tele-radiology streaming.
 
 \section*{Acknowledgment}
 This research was supported by the School of Science, Engineering \& Technology, RMIT University Vietnam, and the School of Computing Technologies, RMIT University, Melbourne.

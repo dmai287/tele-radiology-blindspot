@@ -39,71 +39,71 @@ img_ref = img_ref.resize((240, 240), Image.Resampling.LANCZOS)
 img_recon = img_recon.resize((240, 240), Image.Resampling.LANCZOS)
 
 # ----------------- TOP SYSTEM FLOW [y in 37 to 98] -----------------
-# 1. Transmitter Block [x in 1.5 to 39.0] (width 37.5)
-card_tx = patches.Rectangle((1.5, 37.0), 37.5, 60.5,
+# 1. Transmitter Block [x in 1.5 to 33.5] (width 32.0, center 17.5)
+card_tx = patches.Rectangle((1.5, 37.0), 32.0, 60.5,
                             facecolor='#f8fafc', edgecolor='#cbd5e1', linewidth=1.0)
 ax1.add_patch(card_tx)
-hdr_tx = patches.Rectangle((1.5, 91.0), 37.5, 6.5,
+hdr_tx = patches.Rectangle((1.5, 91.0), 32.0, 6.5,
                            facecolor='#1e293b', edgecolor='none')
 ax1.add_patch(hdr_tx)
-ax1.text(20.25, 94.25, "TRANSMITTER: Mobile Stroke Unit", ha='center', va='center',
-         fontsize=6.8, fontweight='bold', color='#ffffff')
+ax1.text(17.5, 94.25, "TRANSMITTER (MSU)", ha='center', va='center',
+         fontsize=6.6, fontweight='bold', color='#ffffff')
 
-im_box_ref = OffsetImage(img_ref, zoom=0.31)
-ab_ref = AnnotationBbox(im_box_ref, (20.25, 68.0), frameon=True,
+im_box_ref = OffsetImage(img_ref, zoom=0.275)
+ab_ref = AnnotationBbox(im_box_ref, (17.5, 68.0), frameon=True,
                         bboxprops=dict(edgecolor='#0284c7', facecolor='black', lw=1.2, boxstyle='square,pad=0.08'))
 ax1.add_artist(ab_ref)
 
-ax1.text(20.25, 47.0, r"$\mathbf{X}$ (Reference Scan)", ha='center', va='center',
-         fontsize=7.4, fontweight='bold', color='#0f172a')
-ax1.text(20.25, 42.0, "(Acute 5.8 mm Stroke)", ha='center', va='center',
-         fontsize=6.8, fontstyle='italic', color='#475569')
+ax1.text(17.5, 47.0, r"$\mathbf{X}$ (Reference Scan)", ha='center', va='center',
+         fontsize=7.2, fontweight='bold', color='#0f172a')
+ax1.text(17.5, 42.0, "(Acute 5.8 mm Stroke)", ha='center', va='center',
+         fontsize=6.5, fontstyle='italic', color='#475569')
 
-# 2. Channel Block [x in 43.5 to 56.5] (width 13.0)
-chan_box = patches.Rectangle((43.5, 48.0), 13.0, 39.0,
+# 2. Channel Block [x in 39.5 to 60.5] (width 21.0, center 50.0)
+chan_box = patches.Rectangle((39.5, 47.0), 21.0, 42.0,
                              facecolor='#ffffff', edgecolor='#0284c7', linewidth=1.1)
 ax1.add_patch(chan_box)
 
-chan_hdr = patches.Rectangle((43.5, 80.5), 13.0, 6.5,
+chan_hdr = patches.Rectangle((39.5, 81.5), 21.0, 7.5,
                              facecolor='#0284c7', edgecolor='none')
 ax1.add_patch(chan_hdr)
-ax1.text(50.0, 83.75, "5G NR Uplink", ha='center', va='center',
-         fontsize=6.6, fontweight='bold', color='#ffffff')
+ax1.text(50.0, 85.25, "5G NR Uplink", ha='center', va='center',
+         fontsize=7.0, fontweight='bold', color='#ffffff')
 
-ax1.text(50.0, 73.5, r"$\mathbf{R = 8}$", ha='center', va='center',
-         fontsize=8.5, fontweight='bold', color='#0369a1')
-ax1.text(50.0, 65.5, r"$-87.5\%$ Bits", ha='center', va='center',
-         fontsize=6.8, fontweight='bold', color='#1e293b')
-ax1.text(50.0, 58.0, "In-transit $k$-space", ha='center', va='center',
-         fontsize=6.0, fontstyle='italic', color='#64748b')
-ax1.text(50.0, 52.5, "undersampling", ha='center', va='center',
-         fontsize=6.0, fontstyle='italic', color='#64748b')
+ax1.text(50.0, 74.5, r"$\mathbf{R = 8\times}$", ha='center', va='center',
+         fontsize=9.0, fontweight='bold', color='#0369a1')
+ax1.text(50.0, 66.5, r"$-87.5\%$ Bits", ha='center', va='center',
+         fontsize=7.0, fontweight='bold', color='#1e293b')
+ax1.text(50.0, 58.5, "In-Transit $k$-Space", ha='center', va='center',
+         fontsize=6.3, fontstyle='italic', color='#64748b')
+ax1.text(50.0, 52.5, "Undersampling", ha='center', va='center',
+         fontsize=6.3, fontstyle='italic', color='#64748b')
 
-# Forward arrows
-ax1.annotate('', xy=(43.5, 68.0), xytext=(39.0, 68.0),
-             arrowprops=dict(arrowstyle="-|>", color='#0284c7', lw=1.6, mutation_scale=10))
-ax1.annotate('', xy=(61.0, 68.0), xytext=(56.5, 68.0),
-             arrowprops=dict(arrowstyle="-|>", color='#0284c7', lw=1.6, mutation_scale=10))
+# Forward arrows: length 6.0 units each, clear, bold, distinct
+ax1.annotate('', xy=(39.5, 68.0), xytext=(33.5, 68.0),
+             arrowprops=dict(arrowstyle="-|>", color='#0284c7', lw=2.0, mutation_scale=12))
+ax1.annotate('', xy=(66.5, 68.0), xytext=(60.5, 68.0),
+             arrowprops=dict(arrowstyle="-|>", color='#0284c7', lw=2.0, mutation_scale=12))
 
-# 3. Receiver Block [x in 61.0 to 98.5] (width 37.5)
-card_rx = patches.Rectangle((61.0, 37.0), 37.5, 60.5,
+# 3. Receiver Block [x in 66.5 to 98.5] (width 32.0, center 82.5)
+card_rx = patches.Rectangle((66.5, 37.0), 32.0, 60.5,
                             facecolor='#f8fafc', edgecolor='#cbd5e1', linewidth=1.0)
 ax1.add_patch(card_rx)
-hdr_rx = patches.Rectangle((61.0, 91.0), 37.5, 6.5,
+hdr_rx = patches.Rectangle((66.5, 91.0), 32.0, 6.5,
                            facecolor='#0f172a', edgecolor='none')
 ax1.add_patch(hdr_rx)
-ax1.text(79.75, 94.25, "RECEIVER: Hospital Edge AI", ha='center', va='center',
-         fontsize=6.8, fontweight='bold', color='#ffffff')
+ax1.text(82.5, 94.25, "RECEIVER (Hospital Edge AI)", ha='center', va='center',
+         fontsize=6.0, fontweight='bold', color='#ffffff')
 
-im_box_recon = OffsetImage(img_recon, zoom=0.31)
-ab_recon = AnnotationBbox(im_box_recon, (79.75, 68.0), frameon=True,
+im_box_recon = OffsetImage(img_recon, zoom=0.275)
+ab_recon = AnnotationBbox(im_box_recon, (82.5, 68.0), frameon=True,
                           bboxprops=dict(edgecolor='#dc2626', facecolor='black', lw=1.2, boxstyle='square,pad=0.08'))
 ax1.add_artist(ab_recon)
 
-ax1.text(79.75, 47.0, r"$\hat{\mathbf{X}}$ (Reconstructed Scan)", ha='center', va='center',
-         fontsize=7.4, fontweight='bold', color='#991b1b')
-ax1.text(79.75, 42.0, "(Pathology Silently Erased)", ha='center', va='center',
-         fontsize=6.8, fontweight='bold', color='#dc2626')
+ax1.text(82.5, 47.0, r"$\hat{\mathbf{X}}$ (Reconstructed Scan)", ha='center', va='center',
+         fontsize=7.2, fontweight='bold', color='#991b1b')
+ax1.text(82.5, 42.0, "(Pathology Silently Erased)", ha='center', va='center',
+         fontsize=6.5, fontweight='bold', color='#dc2626')
 
 # ----------------- BOTTOM AUDIT MATRIX [y in 2 to 34] -----------------
 card_audit = patches.Rectangle((1.5, 2.0), 97.0, 32.5,

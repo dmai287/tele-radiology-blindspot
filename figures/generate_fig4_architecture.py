@@ -242,30 +242,37 @@ ax.text(66.75, 31.2, r"$\mathcal{K}_{\mathrm{bulk}}$", ha='center', va='top', fo
 
 # =============================================================================
 # CLOSED-LOOP RETURN PATH: S-NACK RETRANSMISSION (BOTTOM CONTROL PLANE)
+# Direct connection from card_fail (y=20.0) -> S-NACK box -> Layer 2 DARDO (y=18.0)
+# SOLID lines with distinct, clear arrowheads
 # =============================================================================
-# Right-angle arrow from Receiver Fail branch (x=84.0, y=16.5) -> (x=76.5, y=7.0)
-arrow_snack_down = patches.FancyArrowPatch((84.0, 16.5), (76.5, 7.0),
+# 1. Downward path from Receiver card_fail:
+# Starts at bottom center of card_fail (x=84.0, y=20.0), goes down to y=7.0, turns 90 deg left into S-NACK box (x=76.5, y=7.0)
+arrow_snack_down = patches.FancyArrowPatch((84.0, 20.0), (76.5, 7.0),
                                            connectionstyle="angle,angleA=-90,angleB=180,rad=3.0",
-                                           arrowstyle='-|>,head_width=2.2,head_length=2.8',
-                                           color='#dc2626', linestyle='--', linewidth=1.4)
+                                           arrowstyle='-|>,head_width=3.2,head_length=4.2',
+                                           color='#dc2626', linewidth=1.6)
 ax.add_patch(arrow_snack_down)
-ax.text(80.5, 9.8, "Audit Fail", ha='center', va='bottom', fontsize=5.6, fontweight='bold', color='#b91c1c')
+# Place label to the right of the vertical line so horizontal arrow is 100% clean
+ax.text(85.5, 13.0, "Audit Fail", ha='left', va='center', fontsize=6.0, fontweight='bold', color='#b91c1c')
 
-# Central S-NACK Banner (x: 23.5 to 76.5, width 53.0, height 7.0)
-snack_box = patches.Rectangle((23.5, 3.5), 53.0, 7.0, facecolor='#fef2f2', edgecolor='#fca5a5', linewidth=0.9)
+# 2. Central S-NACK Banner (x: 23.5 to 76.5, width 53.0, height 7.0)
+snack_box = patches.Rectangle((23.5, 3.5), 53.0, 7.0, facecolor='#fef2f2', edgecolor='#fca5a5', linewidth=1.0)
 ax.add_patch(snack_box)
 ax.text(50.0, 7.7, "CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL", ha='center', va='center',
         fontsize=6.5, fontweight='bold', color='#991b1b')
 ax.text(50.0, 5.0, r"Selective request for missing high-$\gamma_k$ trajectories ($\Delta k \approx 1.2\,\mathrm{MB}$, Round-Trip Latency $\Delta t \approx 15\,\mathrm{ms}$)",
         ha='center', va='center', fontsize=5.8, color='#7f1d1d')
 
-# Right-angle arrow from S-NACK banner (x=23.5, y=7.0) -> Transmitter DARDO (x=16.0, y=16.5)
-arrow_snack_up = patches.FancyArrowPatch((23.5, 7.0), (16.0, 16.5),
+# 3. Upward return path from S-NACK box to Transmitter Layer 2 DARDO:
+# Starts at left edge of S-NACK box (x=23.5, y=7.0), goes left to x=16.0, turns 90 deg UP into b2_box (x=16.0, y=18.0)
+arrow_snack_up = patches.FancyArrowPatch((23.5, 7.0), (16.0, 18.0),
                                          connectionstyle="angle,angleA=180,angleB=90,rad=3.0",
-                                         arrowstyle='-|>,head_width=2.2,head_length=2.8',
-                                         color='#dc2626', linestyle='--', linewidth=1.4)
+                                         arrowstyle='-|>,head_width=3.2,head_length=4.2',
+                                         color='#dc2626', linewidth=1.6)
 ax.add_patch(arrow_snack_up)
-ax.text(19.5, 9.8, r"Resend $\Delta k$", ha='center', va='bottom', fontsize=5.6, fontweight='bold', color='#b91c1c')
+# Place label to the left of the vertical line so vertical arrow is 100% clean
+ax.text(14.5, 13.0, r"Resend $\Delta k$", ha='right', va='center', fontsize=6.0, fontweight='bold', color='#b91c1c')
+
 
 # Save high-res PDF and PNG
 fig_dir = os.path.dirname(os.path.abspath(__file__))

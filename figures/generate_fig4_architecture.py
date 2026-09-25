@@ -80,7 +80,7 @@ ax.text(3.8, 32.0, r"$\bullet$ Diagnostic Grad: $\gamma_k = \sum_y W(k,y)\|\math
         fontsize=7.1, color='#222222')
 ax.text(3.8, 26.6, r"$\bullet$ Greedy Line Allocation ($< 2\,\mathrm{ms}$ Edge CPU)",
         fontsize=7.1, color='#222222')
-ax.text(3.8, 21.2, r"$\bullet$ Slashes stroke erasure: 28.8% $\to <4.5\%$",
+ax.text(3.8, 21.2, r"$\bullet$ Slashes stroke erasure: 28.8% $\to 1.89\%$",
         fontsize=7.1, fontweight='bold', color='#b2182b')
 
 # =============================================================================

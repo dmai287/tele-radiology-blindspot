@@ -17,7 +17,7 @@
 
 \begin{document}
 
-\title{The QoS Illusion in Tele-Radiology: Silent Pathology Erasure Under Network Rate-Distortion}
+\title{Silent Stroke Loss in Tele-Radiology: The Network QoS Illusion}
 
 \author{\IEEEauthorblockN{Dat Tat Mai\IEEEauthorrefmark{1}, Hung Tran Quy\IEEEauthorrefmark{1}, Thai Viet Pham\IEEEauthorrefmark{2}, and James Jin Kang\IEEEauthorrefmark{1}}
 \IEEEauthorblockA{\IEEEauthorrefmark{1}School of Science, Engineering \& Technology, RMIT University Vietnam, Ho Chi Minh City, Vietnam}
@@ -28,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-In emergency tele-radiology and mobile stroke ambulances, brain MRI scans must be aggressively compressed before transmission over wireless networks to meet urgent clinical deadlines. Hospital edge servers deploy deep learning reconstruction models (such as deep variational networks) to recover images from 75 to 87.5 percent compressed data (4-fold to 8-fold compression), relying on standard Quality of Service (QoS) metrics like PSNR and SSIM to certify transmission quality. In this paper, we expose a critical hazard termed the QoS Illusion in tele-radiology: deep neural networks trained to minimize whole-image pixel errors learn to silently erase small acute strokes into smooth, false-normal tissue. We prove mathematically that: (1) because PSNR averages error across millions of pixels, completely erasing a small acute stroke shifts global PSNR by less than 0.03 dB, which is completely hidden inside telemetry noise; and (2) physical data-consistency checks fail because missing details fall into the measurement null space, altering residuals by less than scanner thermal noise. To evaluate this danger, we propose the Causal Safety Audit (CSA), which quantifies physical lesion detectability using task-based model observers after edge AI reconstruction. Evaluating 3,960 brain MRI test cases, we find that increasing wireless compression from 4-fold to 8-fold causes deep learning models to silently erase acute strokes in 18.2 percent to 28.8 percent of cases. Yet, conventional network QoS metrics report an almost unchanged PSNR (a negligible 0.016 dB difference) and high SSIM above 0.86. These results show that tele-radiology networks cannot ensure diagnostic preservation using traditional pixel-averaged metrics alone, and motivate diagnostic-aware edge streaming protocols.
+In emergency mobile tele-radiology, brain MRI scans must be heavily compressed to stream over cellular networks within the critical stroke ``golden hour''. To reconstruct these scans, edge servers deploy deep learning models while relying on conventional Quality of Service (QoS) metrics to verify transmission quality. In this paper, we expose the ``QoS Illusion'' in medical streaming: deep learning models optimized for overall visual quality learn to silently erase small acute strokes into smooth, normal-looking tissue. Because standard network metrics average errors over millions of pixels, and missing stroke signatures produce signals smaller than background scanner noise, these life-threatening omissions pass edge network checks completely undetected. This creates a severe clinical hazard, risking false-negative stroke misdiagnoses and delayed emergency treatment while the network dashboard reports flawless transmission. To resolve this danger, we introduce the Causal Safety Audit (CSA) to evaluate actual lesion detectability across the streaming pipeline. Validating across thousands of clinical MRI cases, we show that aggressive wireless compression silently erases acute strokes in up to nearly 30\% of cases, despite pristine network QoS scores. Our findings reveal that conventional rate-distortion metrics cannot safeguard patient diagnostic integrity, motivating the need for task-aware, diagnostic-safe medical streaming protocols.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -51,7 +51,7 @@ In telecommunications, rate-distortion optimization (RDO) balances transmission 
 \label{fig:dual_blindspot}
 \end{figure*}
 
-In this paper, we demonstrate that this evaluation paradigm creates a dangerous \textbf{QoS Illusion in Tele-Radiology}. Because acute lacunar strokes occupy only a tiny fraction of the brain (often $<50$ voxels), their erasure barely registers in whole-image averages. We prove analytically and empirically that:
+In this paper, we demonstrate that this evaluation paradigm creates a dangerous \textbf{QoS Illusion in Tele-Radiology}. Because acute lacunar strokes occupy only a tiny fraction of the brain (often $<50$ voxels), their erasure barely registers in whole-image averages. We demonstrate analytically and empirically that:
 \begin{enumerate}
     \item \textbf{Image-Domain Blindness:} Standard metrics (PSNR, SSIM) spatially average errors across millions of pixels. Erasing an acute $100\,\text{mm}^3$ stroke outright shifts global PSNR by $<0.03\,\text{dB}$---completely lost in telemetry noise.
     \item \textbf{Measurement-Domain Invariance:} Data-consistency gates are blind to the operator's numerical null space. An erased lesion alters residuals by $<10^{-8}$, well below scanner thermal noise.
@@ -276,10 +276,10 @@ Within the 60-minute stroke ``golden hour'', triage requires scan-to-decision ti
 \section{Conclusion}
 \label{sec:conclusion}
 
-In this paper, we exposed the QoS Illusion in tele-radiology: standard rate-distortion metrics (PSNR, SSIM) and data-consistency gates fail to detect catastrophic diagnostic omissions under network bandwidth compression. We proved mathematically that erasing an acute $100\,\text{mm}^3$ stroke shifts PSNR by $<0.03\,\text{dB}$ and alters residuals by $<10^{-8}$, lost in thermal noise. Evaluating $3{,}960$ fastMRI counterfactual pairs revealed that escalating compression from $4\times$ to $8\times$ drives silent stroke erasure from $18.2\%$ to $28.8\%$, invisible to conventional QoS monitors. To resolve this hazard, we proposed a 4-layer diagnostic-aware architecture integrating task observers, DARDO compression, 5G URLLC slicing, and closed-loop semantic tokens. Our framework slashes acute stroke erasure from $28.8\%$ down to $1.89\%$ ($15.2\times$ reduction) under identical $87.5\%$ payload savings in $101.8\,$s, providing a rigorous foundation for diagnostic-aware mobile tele-radiology streaming.
+In this paper, we exposed the QoS Illusion in tele-radiology: standard rate-distortion metrics (PSNR, SSIM) and data-consistency gates fail to detect catastrophic diagnostic omissions under network bandwidth compression. We demonstrated analytically that erasing an acute $100\,\text{mm}^3$ stroke shifts PSNR by $<0.03\,\text{dB}$ and alters residuals by $<10^{-8}$, lost in thermal noise. Evaluating $3{,}960$ fastMRI counterfactual pairs revealed that escalating compression from $4\times$ to $8\times$ drives silent stroke erasure from $18.2\%$ to $28.8\%$, invisible to conventional QoS monitors. To resolve this hazard, we proposed a 4-layer diagnostic-aware architecture integrating task observers, DARDO compression, 5G URLLC slicing, and closed-loop semantic tokens. Our framework slashes acute stroke erasure from $28.8\%$ down to $1.89\%$ ($15.2\times$ reduction) under identical $87.5\%$ payload savings in $101.8\,$s, providing a rigorous foundation for diagnostic-aware mobile tele-radiology streaming.
 
 \section*{Acknowledgment}
-This research was supported by the School of Science, Engineering \& Technology, RMIT University Vietnam, and the School of Computing Technologies, RMIT University, Melbourne.
+The authors acknowledge the use of the NYU fastMRI dataset and open-source reconstruction frameworks, which provided essential resources for conducting the experiments in this study.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

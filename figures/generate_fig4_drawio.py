@@ -4,7 +4,7 @@ import fitz
 def build_spaced_drawio_xml():
     xml = """<mxfile host="app.diagrams.net" modified="2026-09-25T13:00:00.000Z" agent="Mozilla/5.0" version="21.6.8" type="device">
   <diagram id="fig4_dardo_architecture" name="Figure 4 Architecture">
-    <mxGraphModel dx="1110" dy="385" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1110" pageHeight="385" math="1" shadow="0">
+    <mxGraphModel dx="1115" dy="425" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1115" pageHeight="425" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -120,17 +120,17 @@ def build_spaced_drawio_xml():
         <!-- ========================================== -->
         <!-- S-NACK RETRANSMISSION PROTOCOL (BOTTOM)    -->
         <!-- ========================================== -->
-        <mxCell id="snack_banner" value="&lt;div style=&quot;display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; padding:4px 12px; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;color:#991b1b; font-size:12px; font-weight:bold;&quot;&gt;CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL&lt;/div&gt;&lt;div style=&quot;color:#7f1d1d; font-size:10.5px; margin-top:2px;&quot;&gt;Smart Recovery: Requests only missing high-&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; bands (&amp;Delta;k &amp;approx; 1.2 MB, &amp;Delta;t &amp;approx; 15 ms) &amp;mdash; Avoids 200 MB full retransmission&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.3;arcSize=3;overflow=hidden;" vertex="1" parent="1">
-          <mxGeometry x="230" y="318" width="650" height="48" as="geometry" />
+        <mxCell id="snack_banner" value="&lt;div style=&quot;display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; padding:6px 14px; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;color:#991b1b; font-size:12px; font-weight:bold;&quot;&gt;CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL&lt;/div&gt;&lt;div style=&quot;color:#7f1d1d; font-size:10.5px; margin-top:3px;&quot;&gt;Smart Recovery: Requests only missing high-&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; bands (&amp;Delta;k &amp;approx; 1.2 MB, &amp;Delta;t &amp;approx; 15 ms) &amp;mdash; Avoids 200 MB full retransmission&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.3;arcSize=3;overflow=hidden;" vertex="1" parent="1">
+          <mxGeometry x="230" y="318" width="650" height="56" as="geometry" />
         </mxCell>
 
         <!-- Return Arrow 1: Downward from card_fail to S-NACK banner -->
         <mxCell id="arr_snack_down" value="&lt;b style=&quot;color:#b91c1c;font-size:10px;&quot;&gt;Audit Failed&lt;br&gt;(Stroke Erased)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=6;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;strokeWidth=2.2;fontColor=#b91c1c;fontSize=10;fontFamily=Helvetica;align=left;spacingLeft=6;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="937" y="304" as="sourcePoint" />
-            <mxPoint x="880" y="342" as="targetPoint" />
+            <mxPoint x="880" y="346" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="937" y="342" />
+              <mxPoint x="937" y="346" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -138,10 +138,10 @@ def build_spaced_drawio_xml():
         <!-- Return Arrow 2: Left and UP from S-NACK banner to Layer 2 DARDO -->
         <mxCell id="arr_snack_up" value="&lt;b style=&quot;color:#b91c1c;font-size:10px;&quot;&gt;Targeted S-NACK&lt;br&gt;(Resend Missing &amp;Delta;k)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=6;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;strokeWidth=2.2;fontColor=#b91c1c;fontSize=10;fontFamily=Helvetica;align=right;spacingRight=6;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="230" y="342" as="sourcePoint" />
+            <mxPoint x="230" y="346" as="sourcePoint" />
             <mxPoint x="172" y="304" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="172" y="342" />
+              <mxPoint x="172" y="346" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -172,13 +172,13 @@ def main():
       margin: 0;
       padding: 0;
       width: 1115px;
-      height: 388px;
+      height: 425px;
       overflow: hidden;
       background: #ffffff;
     }}
     .mxgraph {{
       width: 1115px;
-      height: 388px;
+      height: 425px;
       overflow: visible;
     }}
   </style>
@@ -219,7 +219,7 @@ def main():
         '--disable-gpu',
         '--force-device-scale-factor=2',
         '--virtual-time-budget=3000',
-        '--window-size=1115,388',
+        '--window-size=1115,425',
         f'--screenshot={png_preview}',
         file_url
     ]

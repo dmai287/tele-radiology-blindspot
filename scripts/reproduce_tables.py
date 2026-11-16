@@ -51,7 +51,7 @@ def reproduce_table1(df):
     
     print(f"{'Payload Savings':<36} | {payload_savings[0]:<10} | {payload_savings[1]:<10} | {payload_savings[2]:<10} | {'Massive gain':<18}")
     print(f"{'Global PSNR (dB)':<36} | {psnr_means[0]:<10.2f} | {psnr_means[1]:<10.2f} | {psnr_means[2]:<10.2f} | {'High (>25 dB)':<18}")
-    print(f"{'Global SSIM':<36} | {ssim_means[0]:<10.3f} | {ssim_means[1]:<10.3f} | {ssim_means[2]:<10.3f} | {'Intact (>0.86)':<18}")
+    print(f"{'Global SSIM':<36} | {ssim_means[0]:<10.3f} | {ssim_means[1]:<10.3f} | {ssim_means[2]:<10.3f} | {'Smooth decline':<18}")
     print(f"{'Delta PSNR Shift':<36} | {delta_psnr_means[0]:<7.3f} dB | {delta_psnr_means[1]:<7.3f} dB | {delta_psnr_means[2]:<7.3f} dB | {'IMPERCEPTIBLE':<18}")
     print("-" * len(header))
     print("Silent Pathology Erasure Rate by Lesion Volume:")

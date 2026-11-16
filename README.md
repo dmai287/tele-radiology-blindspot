@@ -62,7 +62,7 @@ Evaluated across **3,960 counterfactual test pairs** on the NYU fastMRI multi-co
 | :--- | :---: | :---: | :---: | :--- |
 | **Payload Savings** | **$-75.0\%$** | **$-83.3\%$** | **$-87.5\%$** | Massive bandwidth reduction |
 | **Global Reconstructed PSNR** | $29.46\,\text{dB}$ | $27.23\,\text{dB}$ | $25.30\,\text{dB}$ | High visual fidelity ($>25\,\text{dB}$) |
-| **Global SSIM** | $0.866$ | $0.866$ | $0.866$ | Intact structure ($>0.86$) |
+| **Global SSIM** | $0.846$ | $0.801$ | $0.760$ | Smooth decline (no lesion signature) |
 | **$\Delta\text{PSNR}$ Metric Shift** | $0.015\,\text{dB}$ | $0.017\,\text{dB}$ | $0.016\,\text{dB}$ | **IMPERCEPTIBLE (Hidden)** |
 | *Silent Pathology Erasure:* | | | | |
 | $V = 10\,\text{mm}^3$ (Micro-infarct) | $7.95\%$ | $7.95\%$ | $11.74\%$ | Sub-threshold omission |
@@ -109,7 +109,7 @@ Evaluated across **3,960 counterfactual test pairs** on the NYU fastMRI multi-co
    $$\min_{\mathcal{M}} \quad \text{Rate}(\mathcal{M}) \quad \text{s.t.} \quad d'_{\text{CHO}}(\mathcal{M}) \ge d'_{\text{threshold}}$$
    - Greedy line allocation takes **$< 2\,\text{ms}$ on mobile edge CPUs**.
    - Slashes acute stroke silent erasure from **$28.8\%$ down to $1.89\%$** ($15.2\times$ reduction, $<4.55\%$ mean across all volumes) under identical payload ($R=8$).
-3. **Layer 3 (5G RAN Slicing):** High-diagnostic-gradient packets ($\gamma_k$) are tagged with **5G QCI 1/65 (URLLC, Block Error Rate $<10^{-5}$)**, shielding mission-critical pathology bands against bursty cellular fading, while bulk structural frequencies are routed over best-effort eMBB slices.
+3. **Layer 3 (5G RAN Slicing):** High-diagnostic-gradient packets ($\gamma_k$) are tagged with **a delay-critical 5G URLLC class (5QI 82–85, Block Error Rate $<10^{-5}$)**, shielding mission-critical pathology bands against bursty cellular fading, while bulk structural frequencies are routed over best-effort eMBB slices.
 4. **Layer 4 (Transport & Semantic Verification):** Ambulance edge AI extracts a 128-byte pathology token into QUIC/RTP packet headers. If the edge server detectability drops ($z_{\text{recon}} < 1.5$), it triggers a targeted **Selective Negative Acknowledgment (S-NACK)** for only the missing frequency bands ($\sim 15\,\text{ms}$).
 
 ### Table III: Protocol & Performance Comparison
@@ -121,7 +121,7 @@ Evaluated across **3,960 counterfactual test pairs** on the NYU fastMRI multi-co
 | **Compression Factor** | $R = 8$ (87.5% bandwidth savings) | $R = 8$ (87.5% bandwidth savings) |
 | **Acute Stroke Silent Erasure** | **$28.79\%$ (Clinical Hazard)** | **$1.89\%$ ($15.2\times$ reduction)** |
 | **Mean Lesion Metric Shift** | $|\Delta\text{PSNR}| = 0.016\,$dB (Imperceptible) | Verified $z_{\text{recon}} \ge 1.5$ |
-| **Wireless RAN Policy** | Best-Effort (eMBB) | 5G URLLC (QCI 1/65) |
+| **Wireless RAN Policy** | Best-Effort (eMBB) | 5G URLLC (5QI 82–85) |
 | **Fading Loss Immunity** | Vulnerable to packet loss | Guaranteed BLER $< 10^{-5}$ |
 | **Transport Verification** | None (blind decode) | 128-Byte Semantic Token |
 | **Retransmission Policy** | Full Volume ($>200\,$MB) | Targeted S-NACK ($\Delta k \approx 1.2\,$MB) |

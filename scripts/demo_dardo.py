@@ -74,7 +74,7 @@ def dardo_greedy_allocation(gamma_k, acceleration=8, num_acs=16, d_prime_target=
 def classify_5g_slicing(mask, gamma_k, qci_threshold=0.35):
     """
     Step 4: 5G Network Slicing & QoS Tagging.
-    Tag high-gamma_k packets with URLLC QCI 1/65 (BLER < 10^-5),
+    Tag high-gamma_k packets with URLLC 5QI 82-85 (BLER < 10^-5),
     and bulk anatomy with eMBB best-effort slice.
     """
     selected_indices = np.where(mask)[0]
@@ -120,7 +120,7 @@ def run_dardo_benchmark():
     print(f"[1] Execution Latency:     {elapsed_ms:.2f} ms on CPU (Constraint: < 2.0 ms for edge triage)")
     print(f"[2] Compression Ratio:     R = {acceleration}x (Transmitted: {np.sum(mask_dardo)}/{num_ky} lines, Payload Savings: -87.5%)")
     print(f"[3] Diagnostic Energy:     Naive Equispaced: {energy_naive:.1f}%  |  DARDO Allocated: {energy_dardo:.1f}%")
-    print(f"[4] 5G Slicing Partition:  URLLC (QCI 1/65, BLER < 10^-5): {len(urllc_packets)} lines | eMBB Best-Effort: {len(embb_packets)} lines")
+    print(f"[4] 5G Slicing Partition:  URLLC (5QI 82-85, BLER < 10^-5): {len(urllc_packets)} lines | eMBB Best-Effort: {len(embb_packets)} lines")
     
     print("\n" + "-" * 80)
     print("COMPARATIVE CLINICAL SAFETY EVALUATION AT R = 8:")

@@ -87,8 +87,21 @@ def run_full_benchmark():
         return z_new
         
     df['z_recon_dardo'] = df.apply(calc_dardo, axis=1)
-    z_crit = 1.5
-    df['silently_erased_dardo'] = (df['z_ref'] >= z_crit) & (df['z_recon_dardo'] < z_crit)
+    # Same silent-erasure rule as the released labels (`erased`, `silently_erased` columns; paper
+    # Eq. silent_erasure): pre-specified z_det = 3.0 (lesion clearly visible in the fully sampled
+    # reference) and z_miss = 2.0 (missed after transmission; 2.0 <= z < 3.0 is indeterminate), and
+    # the lesion-present global PSNR inside the central 95 % interval of lesion-free PSNR for the same
+    # reconstruction, R and mask. The projection changes z only, so the PSNR gate is the measured one.
+    z_det, z_miss = 3.0, 2.0
+    gate = np.zeros(len(df), dtype=bool)
+    for _, g in df.groupby(['model', 'acceleration', 'mask_type']):
+        pool = g.drop_duplicates(['file', 'slice'])['psnr_factual'].to_numpy()
+        lo, hi = np.quantile(pool, [0.025, 0.975])
+        gate[df.index.get_indexer(g.index)] = (g['psnr_cf'] >= lo).to_numpy() & (g['psnr_cf'] <= hi).to_numpy()
+    df['psnr_gate'] = gate
+    conv = (df['z_ref'] >= z_det) & (df['z_recon'] < z_miss) & df['psnr_gate']
+    assert (conv == df['silently_erased'].astype(bool)).all(), "rule does not reproduce the released labels"
+    df['silently_erased_dardo'] = (df['z_ref'] >= z_det) & (df['z_recon_dardo'] < z_miss) & df['psnr_gate']
     
     accels = [4, 6, 8]
     volumes = [10.0, 27.0, 64.0, 100.0, 200.0]

@@ -67,14 +67,14 @@ for vol in [27.0, 64.0, 100.0]:
     ax2.plot(accels, z_means, marker=m, linewidth=lw, markersize=8 if vol==64.0 else 6,
              color=palette[str(vol)], label=lbl)
 
-ax2.axhline(1.5, color='black', linestyle=':', linewidth=1.8, label=r'Clinical threshold ($z_{\mathrm{crit}} = 1.5$)')
+ax2.axhline(2.0, color='black', linestyle=':', linewidth=1.8, label=r'Miss threshold ($z_{\mathrm{miss}} = 2.0$)')
 ax2.set_xlabel('Acceleration Factor R (Undersampling)', fontweight='bold')
 ax2.set_ylabel(r'Diagnostic Detectability Score ($z_{\mathrm{recon}}$)', fontweight='bold')
 ax2.set_title('(b) Task-Based Detectability\n(Diagnostic confidence collapses)', fontweight='bold')
 ax2.set_xlim(3.3, 8.7)
 ax2.set_xticks(accels)
 ax2.set_xticklabels(x_tick_labels, fontweight='bold')
-ax2.set_ylim(0.6, 2.4)
+ax2.set_ylim(0.6, 2.9)
 ax2.legend(loc='upper right', framealpha=0.95, fontsize=8.5)
 ax2.grid(True, linestyle=':', alpha=0.5)
 

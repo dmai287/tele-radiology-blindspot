@@ -1,247 +1,250 @@
-import os, json, subprocess
+"""
+Architecture figure (paper Fig. 2): draw.io diagram -> rendered with the draw.io viewer in headless Edge.
+
+Outputs (run from the repository root):
+  figures/fig4_architecture_diagram_io.drawio   editable in diagrams.net
+  figures/fig4_architecture.png                 3x screenshot, cropped to the drawing
+  figures/fig4_architecture.pdf                 that PNG on a page of the drawing's size
+
+Layout grid (1x px): 306-320-306 px columns with 80 px gaps for the flow labels, two 116 px boxes per column
+with a 32 px gap for the vertical arrow, labels placed beside their arrows, canvas cropped to the content.
+Labels follow the camera-ready text: delay-critical GBR 5QI 82-85 and the pre-registered miss threshold
+z_miss = 2.0.
+"""
+import html
+import json
+import os
+import subprocess
+
 import fitz
 
-def build_spaced_drawio_xml():
-    xml = """<mxfile host="app.diagrams.net" modified="2026-09-25T13:00:00.000Z" agent="Mozilla/5.0" version="21.6.8" type="device">
-  <diagram id="fig4_dardo_architecture" name="Figure 4 Architecture">
-    <mxGraphModel dx="1115" dy="425" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1115" pageHeight="425" math="1" shadow="0">
+W_PAGE, H_PAGE = 1115, 420
+COL_Y, COL_H, HDR = 44, 304, 24
+COLS = {"tx": (12, 306), "ran": (398, 320), "rx": (798, 306)}
+BOX_X, BOX_H, BOX1_Y, BOX2_Y = 8, 116, 32, 180          # relative to the column
+SCALE = 3                                               # raster scale of the rendered figure
+FONT = "font-family:Helvetica,Arial,sans-serif;"
+_cells = []
+
+
+def esc(s):
+    return html.escape(s, quote=True)
+
+
+def cell(cid, value, style, x, y, w, h, parent="1", vertex=True):
+    kind = 'vertex="1"' if vertex else 'edge="1"'
+    _cells.append(f'<mxCell id="{cid}" value="{esc(value)}" style="{style}" {kind} parent="{parent}">'
+                  f'<mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" as="geometry" /></mxCell>')
+
+
+def text(cid, value, x, y, w, h, align="center", valign="middle"):
+    cell(cid, value, f"text;html=1;align={align};verticalAlign={valign};whiteSpace=wrap;strokeColor=none;"
+         "fillColor=none;spacing=0;", x, y, w, h)
+
+
+def arrow(cid, pts, color, width=2.2):
+    (x0, y0), (x1, y1), mids = pts[0], pts[-1], pts[1:-1]
+    arr = "".join(f'<mxPoint x="{x}" y="{y}" />' for x, y in mids)
+    arr = f'<Array as="points">{arr}</Array>' if mids else ""
+    _cells.append(f'<mxCell id="{cid}" value="" style="edgeStyle=none;html=1;rounded=0;strokeColor={color};'
+                  f'strokeWidth={width};endArrow=block;endFill=1;endSize=5;" edge="1" parent="1">'
+                  f'<mxGeometry relative="1" as="geometry"><mxPoint x="{x0}" y="{y0}" as="sourcePoint" />'
+                  f'<mxPoint x="{x1}" y="{y1}" as="targetPoint" />{arr}</mxGeometry></mxCell>')
+
+
+def box_html(w, h, header, hdr_bg, hdr_fg, hdr_line, bullets, footer=None, ft_bg=None, ft_line=None, ft_fg=None,
+             ft_size=11, cards=None):
+    head = (f'<div style="background:{hdr_bg};color:{hdr_fg};font-weight:bold;font-size:11.5px;text-align:center;'
+            f'padding:4px 0;border-bottom:1px solid {hdr_line};border-radius:3px 3px 0 0;">{header}</div>')
+    if cards:
+        body = "".join(
+            f'<div style="margin:5px 8px 0 8px;background:{bg};border:1px solid {line};border-radius:3px;'
+            f'padding:2px 7px;text-align:left;line-height:1.3;"><b style="color:{fg};font-size:11px;">{title}</b><br>'
+            f'<span style="color:{fg2};font-size:9.5px;">{sub}</span></div>'
+            for bg, line, fg, fg2, title, sub in cards)
+        tail = '<div style="height:6px;"></div>'
+    else:
+        body = (f'<div style="padding:5px 12px 0 12px;font-size:11px;line-height:1.5;color:#334155;text-align:left;">'
+                + "".join(f"<div>&bull; {b}</div>" for b in bullets) + "</div>")
+        tail = (f'<div style="margin:0 8px 7px 8px;background:{ft_bg};border:1px solid {ft_line};border-radius:3px;'
+                f'color:{ft_fg};font-size:{ft_size}px;font-weight:bold;text-align:center;padding:3px 2px;">{footer}</div>')
+    return (f'<div style="width:{w - 2}px;height:{h - 2}px;display:flex;flex-direction:column;'
+            f'justify-content:space-between;{FONT}">{head}{body}{tail}</div>')
+
+
+def box(cid, col, rel_y, label, stroke):
+    cx, cw = COLS[col]
+    cell(cid, label, f"rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor={stroke};"
+         "strokeWidth=1.2;overflow=hidden;align=left;verticalAlign=top;spacing=0;", BOX_X, rel_y, cw - 16, BOX_H,
+         parent=f"col_{col}")
+
+
+def b(s):
+    return f'<b style="color:#0f172a;">{s}</b>'
+
+
+def build_xml():
+    _cells.clear()
+    text("title", '<b style="font-size:15px;color:#0f172a;">FOUR-LAYER DIAGNOSTIC-AWARE TELE-RADIOLOGY ARCHITECTURE '
+         '(DARDO + CSA + 5G URLLC)</b><br><span style="font-size:11.5px;color:#475569;">Mobile Stroke Unit (MSU) '
+         'Scanner &rarr; Dual-Slice 5G Cellular RAN &rarr; Hospital Edge AI Safety Audit</span>',
+         0, 4, W_PAGE, 34)
+    for col, title in (("tx", "TRANSMITTER: MOBILE STROKE UNIT (MSU)"),
+                       ("ran", "5G / B5G CELLULAR RADIO ACCESS NETWORK"),
+                       ("rx", "RECEIVER: HOSPITAL EDGE SERVER")):
+        x, w = COLS[col]
+        cell(f"col_{col}", f"<b>{title}</b>", f"swimlane;whiteSpace=wrap;html=1;startSize={HDR};fillColor=#0f172a;"
+             "strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;"
+             "swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;", x, COL_Y, w, COL_H)
+
+    wtx, wran, wrx = (COLS[c][1] - 16 for c in ("tx", "ran", "rx"))
+    box("l1", "tx", BOX1_Y, box_html(
+        wtx, BOX_H, 'LAYER 1: TASK PROFILER (CSA) <span style="font-weight:normal;font-size:10px;">&mdash; '
+        'Lesion Prior</span>', "#e0f2fe", "#0369a1", "#7dd3fc",
+        [f'{b("Raw Data:")} Multi-coil <i>k</i>-space <b>Y</b> &isin; &#x2102;<sup>C&times;K</sup>',
+         f'{b("Task Prior:")} <b style="color:#0284c7;"><i>W(k<sub>x</sub>,k<sub>y</sub>) = '
+         f'|&#x2131;{{w<sub>CHO</sub>}}|<sup>2</sup></i></b>'],
+        'Safety Target: Detectability <i>z</i><sub>CHO</sub> &ge; 2.0', "#f0f9ff", "#38bdf8", "#0284c7"), "#bae6fd")
+    box("l2", "tx", BOX2_Y, box_html(
+        wtx, BOX_H, "LAYER 2: DIAGNOSTIC COMPRESSION (DARDO)", "#dcfce7", "#15803d", "#86efac",
+        [f'{b("Diagnostic Grad:")} <b style="color:#15803d;">&gamma;<sub>k</sub> = &sum;<sub>y</sub> W(k,y) '
+         f'||&#x2131;S<sub>k</sub>||<sub>2</sub></b>',
+         f'{b("Greedy Split:")} Sort in &lt; 2 ms &rArr; <b style="color:#ea580c;">K<sub>diag</sub></b> vs. '
+         f'<b style="color:#64748b;">K<sub>bulk</sub></b>'],
+        "Safety Probe: 128-B Token &theta; in Header", "#f0fdf4", "#4ade80", "#166534"), "#bbf7d0")
+    box("urllc", "ran", BOX1_Y, box_html(
+        wran, BOX_H, "LAYER 3: 5G URLLC SLICE (MISSION-CRITICAL)", "#ffedd5", "#c2410c", "#fdba74",
+        [f'{b("Payload:")} <b style="color:#ea580c;">K<sub>diag</sub> = {{k | &gamma;<sub>k</sub> &ge; &tau;}}</b> + '
+         f'<b style="color:#15803d;">Token &theta;</b>',
+         f'{b("3GPP QoS:")} 5QI 82&ndash;85 (BLER &lt; 10<sup>&minus;5</sup>, &lt; 10 ms)'],
+        "Channel: Dedicated BWP (Zero Burst Drop)", "#fff7ed", "#fb923c", "#c2410c"), "#fed7aa")
+    box("embb", "ran", BOX2_Y, box_html(
+        wran, BOX_H, "LAYER 3: 5G eMBB SLICE (BULK ANATOMY)", "#f1f5f9", "#334155", "#cbd5e1",
+        [f'{b("Bulk Payload:")} <b style="color:#475569;">K<sub>bulk</sub> = {{k | &gamma;<sub>k</sub> &lt; &tau;}}</b>'
+         ' <i style="color:#64748b;">(Skull Context)</i>',
+         f'{b("Policy:")} Dynamic DASH Streaming <i style="color:#64748b;">(Loss-Tolerant)</i>'],
+        "Throughput: Best-Effort (Absorbs Congestion)", "#f8fafc", "#94a3b8", "#475569"), "#cbd5e1")
+    box("recon", "rx", BOX1_Y, box_html(
+        wrx, BOX_H, "EDGE AI RECONSTRUCTION (VarNet)", "#ede9fe", "#6d28d9", "#c4b5fd",
+        [f'{b("Stream Fusion:")} <b>Y</b><sub>URLLC</sub> &cup; <b>Y</b><sub>eMBB</sub>',
+         f'{b("Deep Recon:")} <b style="color:#6d28d9;">X&#770; = &#x211b;<sub>&theta;</sub>(Y)</b> in 1.8 s on '
+         'Edge GPU'],
+        'Residual: Passed ||AX&#770; &minus; Y|| &lt; &sigma;<sub>&eta;</sub> (Null-Space Blind)',
+        "#f5f3ff", "#c4b5fd", "#7c3aed", ft_size=10), "#ddd6fe")
+    box("l4", "rx", BOX2_Y, box_html(
+        wrx, BOX_H, "LAYER 4: SEMANTIC AUDIT &amp; DECISION GATE", "#ffe4e6", "#be123c", "#fecdd3", None,
+        cards=[("#f0fdf4", "#86efac", "#15803d", "#166534", "&#x2714; z &ge; 2.0 (AUDIT PASSED: STROKE INTACT)",
+                "<i>z</i><sub>recon</sub> &ge; <i>z</i><sub>miss</sub> &rarr; Released to PACS &amp; Clinician"),
+               ("#fef2f2", "#fca5a5", "#b91c1c", "#dc2626", "&#x2718; z &lt; 2.0 (AUDIT FAILED: STROKE ERASED)",
+                "<b>Silent Erasure Alert &rArr; Trigger Targeted S-NACK</b>")]), "#fecdd3")
+
+    # vertical arrows inside the transmitter and receiver, label to the right of the arrow
+    for cid, col, lab, color in (("a_tx", "tx", "Prior W(k<sub>x</sub>,k<sub>y</sub>)", "#0284c7"),
+                                 ("a_rx", "rx", "Reconstructed X&#770; + &theta;", "#6d28d9")):
+        x, w = COLS[col]
+        xc = x + w / 2
+        y0, y1 = COL_Y + BOX1_Y + BOX_H, COL_Y + BOX2_Y
+        arrow(cid, [(xc, y0 + 1), (xc, y1 - 1)], color, 1.6)
+        text(cid + "_lab", f'<b style="color:{color};font-size:10px;">{lab}</b>', xc + 7, y0 + 8, 150, 16, "left")
+
+    # inter-column flows, label centred above each arrow
+    gaps = ((COLS["tx"][0] + COLS["tx"][1], COLS["ran"][0]), (COLS["ran"][0] + COLS["ran"][1], COLS["rx"][0]))
+    for i, (g0, g1) in enumerate(gaps):
+        for name, sub, color, lc, rel in (("URLLC Flow", "K<sub>diag</sub> + &theta;", "#ea580c", "#c2410c", BOX1_Y),
+                                          ("eMBB Flow", "K<sub>bulk</sub>", "#64748b", "#475569", BOX2_Y)):
+            y = COL_Y + rel + BOX_H / 2 + 6
+            arrow(f"f_{name[:4]}_{i}", [(g0, y), (g1, y)], color, 2.4)
+            text(f"f_{name[:4]}_{i}_lab", f'<b style="color:{lc};font-size:10.5px;">{name}</b><br>'
+                 f'<span style="color:{lc};font-size:9.5px;">{sub}</span>', g0, y - 32, g1 - g0, 28)
+
+    # closed loop: Layer 4 -> S-NACK banner -> transmitter
+    by, bh, bx, bw = COL_Y + COL_H + 18, 46, 232, 651
+    cell("snack", '<div style="' + FONT + 'text-align:center;"><div style="color:#991b1b;font-size:12px;'
+         'font-weight:bold;">CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL</div><div style="color:#7f1d1d;'
+         'font-size:10.5px;margin-top:3px;">Smart Recovery: Requests only missing high-&gamma;<sub>k</sub> bands '
+         '(&Delta;k &asymp; 1.2 MB, &Delta;t &asymp; 15 ms) &mdash; Avoids 200 MB full retransmission</div></div>',
+         "rounded=1;arcSize=4;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.3;"
+         "align=center;verticalAlign=middle;", bx, by, bw, bh)
+    ym = by + bh / 2
+    xr = COLS["rx"][0] + COLS["rx"][1] / 2
+    xl = COLS["tx"][0] + COLS["tx"][1] / 2
+    arrow("loop_r", [(xr, COL_Y + COL_H), (xr, ym), (bx + bw, ym)], "#dc2626")
+    arrow("loop_l", [(bx, ym), (xl, ym), (xl, COL_Y + COL_H)], "#dc2626")
+    text("loop_r_lab", '<b style="color:#b91c1c;font-size:10px;">Audit Failed<br>(Stroke Erased)</b>',
+         xr + 8, COL_Y + COL_H + 6, 120, 28, "left")
+    text("loop_l_lab", '<b style="color:#b91c1c;font-size:10px;">Targeted S-NACK<br>(Resend Missing &Delta;k)</b>',
+         xl - 8 - 140, COL_Y + COL_H + 6, 140, 28, "right")
+
+    body = "\n        ".join(_cells)
+    return f"""<mxfile host="app.diagrams.net" type="device">
+  <diagram id="fig_architecture" name="Architecture">
+    <mxGraphModel dx="{W_PAGE}" dy="{H_PAGE}" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="{W_PAGE}" pageHeight="{H_PAGE}" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-
-        <!-- ========================================== -->
-        <!-- MAIN TITLE                                 -->
-        <!-- ========================================== -->
-        <mxCell id="title" value="&lt;b style=&quot;font-size: 15px; letter-spacing: 0.2px; color: #0f172a;&quot;&gt;FOUR-LAYER DIAGNOSTIC-AWARE TELE-RADIOLOGY ARCHITECTURE (DARDO + CSA + 5G URLLC)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11.5px; color: #475569;&quot;&gt;Mobile Stroke Unit (MSU) Scanner &amp;rarr; Dual-Slice 5G Cellular RAN &amp;rarr; Hospital Edge AI Safety Audit&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;" vertex="1" parent="1">
-          <mxGeometry x="205" y="2" width="700" height="32" as="geometry" />
-        </mxCell>
-
-        <!-- ========================================== -->
-        <!-- COLUMN 1: TRANSMITTER (MSU)                -->
-        <!-- ========================================== -->
-        <mxCell id="col_tx" value="&lt;b&gt;TRANSMITTER: MOBILE STROKE UNIT (MSU)&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=24;fillColor=#0f172a;strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;" vertex="1" parent="1">
-          <mxGeometry x="15" y="36" width="315" height="268" as="geometry" />
-        </mxCell>
-
-        <!-- Layer 1 Flex Box -->
-        <mxCell id="l1_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#e0f2fe; color:#0369a1; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #7dd3fc; border-radius:3px 3px 0 0;&quot;&gt;LAYER 1: TASK PROFILER (CSA) &lt;span style=&quot;font-weight:normal; font-size:10px; color:#0284c7;&quot;&gt;&amp;mdash; Lesion Prior&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Raw Data:&lt;/b&gt; Multi-coil raw &lt;i&gt;k&lt;/i&gt;-space &lt;b&gt;Y&lt;/b&gt; &amp;isin; &amp;#x2102;&lt;sup&gt;C&amp;times;K&lt;/sup&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Task Prior:&lt;/b&gt; Spectrum &lt;b style=&quot;color:#0284c7;&quot;&gt;&lt;i&gt;W(k&lt;sub&gt;x&lt;/sub&gt;,k&lt;sub&gt;y&lt;/sub&gt;) = |&amp;#x2131;{w&lt;sub&gt;CHO&lt;/sub&gt;}|&lt;sup&gt;2&lt;/sup&gt;&lt;/i&gt;&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f0f9ff; border:1px solid #38bdf8; border-radius:3px; color:#0284c7; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Safety Target: Detectability &lt;i&gt;d'&lt;/i&gt;&lt;sub&gt;CHO&lt;/sub&gt; &amp;ge; 1.5&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#bae6fd;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_tx">
-          <mxGeometry x="8" y="28" width="299" height="106" as="geometry" />
-        </mxCell>
-
-        <!-- Downward arrow Layer 1 -> Layer 2 -->
-        <mxCell id="arr_tx_internal" value="&lt;span style=&quot;background-color:#f8fafc;padding:0 4px;font-size:10px;&quot;&gt;Prior W(k&lt;sub&gt;x&lt;/sub&gt;,k&lt;sub&gt;y&lt;/sub&gt;)&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#0284c7;strokeWidth=1.5;fontColor=#0284c7;fontSize=10;fontFamily=Helvetica;fontStyle=1;align=center;verticalAlign=middle;endArrow=block;endFill=1;endSize=4;" edge="1" parent="col_tx" source="l1_box" target="l2_box">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-
-        <!-- Layer 2 Flex Box -->
-        <mxCell id="l2_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#dcfce7; color:#15803d; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #86efac; border-radius:3px 3px 0 0;&quot;&gt;LAYER 2: DIAGNOSTIC COMPRESSION (DARDO)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Diagnostic Grad:&lt;/b&gt; &lt;span style=&quot;color:#15803d;font-weight:bold;&quot;&gt;&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; = &amp;sum;&lt;sub&gt;y&lt;/sub&gt; W(k,y) ||&amp;#x2131;S&lt;sub&gt;k&lt;/sub&gt;||&lt;sub&gt;2&lt;/sub&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Greedy Split:&lt;/b&gt; Sort in &amp;lt; 2ms &amp;rArr; &lt;b style=&quot;color:#ea580c;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt;&lt;/b&gt; vs. &lt;b style=&quot;color:#64748b;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f0fdf4; border:1px solid #4ade80; border-radius:3px; color:#166534; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Safety Probe: 128B Token &lt;b&gt;&amp;theta;&lt;/b&gt; in Header&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#bbf7d0;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_tx">
-          <mxGeometry x="8" y="152" width="299" height="106" as="geometry" />
-        </mxCell>
-
-
-        <!-- ========================================== -->
-        <!-- COLUMN 2: 5G RAN NETWORK                   -->
-        <!-- ========================================== -->
-        <mxCell id="col_ran" value="&lt;b&gt;5G / B5G CELLULAR RADIO ACCESS NETWORK&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=24;fillColor=#0f172a;strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;" vertex="1" parent="1">
-          <mxGeometry x="395" y="36" width="320" height="268" as="geometry" />
-        </mxCell>
-
-        <!-- URLLC Slice Box -->
-        <mxCell id="urllc_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ffedd5; color:#c2410c; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #fdba74; border-radius:3px 3px 0 0;&quot;&gt;LAYER 3: 5G URLLC SLICE (MISSION-CRITICAL)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Payload:&lt;/b&gt; &lt;b style=&quot;color:#ea580c;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; = {k | &amp;gamma;&lt;sub&gt;k&lt;/sub&gt; &amp;ge; &amp;tau;}&lt;/b&gt; + &lt;b style=&quot;color:#15803d;&quot;&gt;Token &amp;theta;&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; 3GPP QoS:&lt;/b&gt; QCI 1/65 (BLER &amp;lt; 10&lt;sup&gt;-5&lt;/sup&gt;, Latency &amp;lt; 10ms)&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#fff7ed; border:1px solid #fb923c; border-radius:3px; color:#c2410c; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Channel: Dedicated BWP (Zero Burst Drop)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fed7aa;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_ran">
-          <mxGeometry x="8" y="28" width="304" height="106" as="geometry" />
-        </mxCell>
-
-        <!-- eMBB Slice Box -->
-        <mxCell id="embb_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#f1f5f9; color:#334155; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #cbd5e1; border-radius:3px 3px 0 0;&quot;&gt;LAYER 3: 5G eMBB SLICE (BULK ANATOMY)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Bulk Payload:&lt;/b&gt; &lt;b style=&quot;color:#475569;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt; = {k | &amp;gamma;&lt;sub&gt;k&lt;/sub&gt; &amp;lt; &amp;tau;}&lt;/b&gt; &lt;i style=&quot;color:#64748b;&quot;&gt;(Skull Context)&lt;/i&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Policy:&lt;/b&gt; Dynamic DASH streaming &lt;i style=&quot;color:#64748b;&quot;&gt;(Loss-tolerant)&lt;/i&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f8fafc; border:1px solid #94a3b8; border-radius:3px; color:#475569; font-size:11px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Throughput: Best-Effort (Absorbs Congestion)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#cbd5e1;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_ran">
-          <mxGeometry x="8" y="152" width="304" height="106" as="geometry" />
-        </mxCell>
-
-
-        <!-- ========================================== -->
-        <!-- COLUMN 3: RECEIVER (EDGE SERVER)           -->
-        <!-- ========================================== -->
-        <mxCell id="col_rx" value="&lt;b&gt;RECEIVER: HOSPITAL EDGE SERVER&lt;/b&gt;" style="swimlane;whiteSpace=wrap;html=1;startSize=24;fillColor=#0f172a;strokeColor=#cbd5e1;strokeWidth=1.5;fontColor=#ffffff;fontFamily=Helvetica;fontSize=12;align=center;swimlaneFillColor=#f8fafc;rounded=1;arcSize=3;" vertex="1" parent="1">
-          <mxGeometry x="780" y="36" width="315" height="268" as="geometry" />
-        </mxCell>
-
-        <!-- Recon Engine Box -->
-        <mxCell id="rx_recon_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ede9fe; color:#6d28d9; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #c4b5fd; border-radius:3px 3px 0 0;&quot;&gt;EDGE AI RECONSTRUCTION (VarNet)&lt;/div&gt;&lt;div style=&quot;padding:4px 8px; font-size:11px; line-height:1.4; color:#334155;&quot;&gt;&lt;div&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Stream Fusion:&lt;/b&gt; Fuses &lt;b&gt;Y&lt;/b&gt;&lt;sub&gt;URLLC&lt;/sub&gt; &amp;cup; &lt;b&gt;Y&lt;/b&gt;&lt;sub&gt;eMBB&lt;/sub&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:2px;&quot;&gt;&lt;b style=&quot;color:#0f172a;&quot;&gt;&amp;bull; Deep Recon:&lt;/b&gt; &lt;span style=&quot;color:#6d28d9;font-weight:bold;&quot;&gt;X&amp;#770; = &amp;#x211b;&lt;sub&gt;&amp;theta;&lt;/sub&gt;(Y)&lt;/span&gt; in 1.8 s on Edge GPU&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin:2px 8px 6px 8px; background:#f5f3ff; border:1px solid #c4b5fd; border-radius:3px; color:#7c3aed; font-size:10.5px; font-weight:bold; text-align:center; padding:3px 0;&quot;&gt;Residual: Passed &lt;span style=&quot;color:#6d28d9;&quot;&gt;||AX&amp;#770; - Y|| &amp;lt; &amp;sigma;&lt;sub&gt;&amp;eta;&lt;/sub&gt;&lt;/span&gt; (Null-Space Blind!)&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ddd6fe;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_rx">
-          <mxGeometry x="8" y="28" width="299" height="106" as="geometry" />
-        </mxCell>
-
-        <!-- Downward arrow Recon -> Layer 4 -->
-        <mxCell id="arr_rx_internal" value="&lt;span style=&quot;background-color:#f8fafc;padding:0 4px;font-size:10px;&quot;&gt;Reconstructed X&amp;#770; + &amp;theta;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#6d28d9;strokeWidth=1.5;fontColor=#6d28d9;fontSize=10;fontFamily=Helvetica;fontStyle=1;align=center;verticalAlign=middle;endArrow=block;endFill=1;endSize=4;" edge="1" parent="col_rx" source="rx_recon_box" target="layer4_box">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-
-        <!-- Layer 4 Audit Box -->
-        <mxCell id="layer4_box" value="&lt;div style=&quot;display:flex; flex-direction:column; height:100%; justify-content:space-between; padding:0; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;background:#ffe4e6; color:#be123c; font-weight:bold; font-size:11.5px; text-align:center; padding:3px 0; border-bottom:1px solid #fecdd3; border-radius:3px 3px 0 0;&quot;&gt;LAYER 4: SEMANTIC AUDIT &amp;amp; DECISION GATE&lt;/div&gt;&lt;div style=&quot;margin:3px 8px; background:#f0fdf4; border:1px solid #86efac; border-radius:3px; padding:3px 6px; text-align:left;&quot;&gt;&lt;b style=&quot;color:#15803d;font-size:11px;&quot;&gt;&amp;#x2714; z &amp;ge; 1.5 (AUDIT PASSED: STROKE INTACT)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#166534;font-size:9.5px;&quot;&gt;Score &lt;i&gt;z&lt;/i&gt;&lt;sub&gt;recon&lt;/sub&gt; &amp;ge; 1.5 &amp;rarr; Safe, Released to PACS &amp;amp; Clinician&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;margin:0 8px 6px 8px; background:#fef2f2; border:1px solid #fca5a5; border-radius:3px; padding:3px 6px; text-align:left;&quot;&gt;&lt;b style=&quot;color:#b91c1c;font-size:11px;&quot;&gt;&amp;#x2718; z &amp;lt; 1.5 (AUDIT FAILED: STROKE ERASED)&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#dc2626;font-size:9.5px;font-weight:bold;&quot;&gt;Silent Erasure Alert &amp;rArr; Trigger Targeted S-NACK Recovery&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#fecdd3;strokeWidth=1.2;arcSize=3;overflow=hidden;" vertex="1" parent="col_rx">
-          <mxGeometry x="8" y="152" width="299" height="106" as="geometry" />
-        </mxCell>
-
-
-        <!-- ========================================== -->
-        <!-- FORWARD FLOW ARROWS (INTER-SWIMLANE)       -->
-        <!-- Gap: 65 px wide (330 to 395, and 715 to 780)-->
-        <!-- ========================================== -->
-        <!-- URLLC Forward: Tx -> RAN -->
-        <mxCell id="arr_urllc_1" value="&lt;b style=&quot;color:#c2410c;font-size:10.5px;&quot;&gt;URLLC Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#c2410c;font-size:9.5px;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; + &amp;theta;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#ea580c;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="330" y="112" as="sourcePoint" />
-            <mxPoint x="395" y="112" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-
-        <!-- URLLC Forward: RAN -> Rx -->
-        <mxCell id="arr_urllc_2" value="&lt;b style=&quot;color:#c2410c;font-size:10.5px;&quot;&gt;URLLC Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#c2410c;font-size:9.5px;&quot;&gt;K&lt;sub&gt;diag&lt;/sub&gt; + &amp;theta;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#ea580c;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="715" y="112" as="sourcePoint" />
-            <mxPoint x="780" y="112" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-
-        <!-- eMBB Forward: Tx -> RAN -->
-        <mxCell id="arr_embb_1" value="&lt;b style=&quot;color:#475569;font-size:10.5px;&quot;&gt;eMBB Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#475569;font-size:9.5px;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#64748b;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="330" y="235" as="sourcePoint" />
-            <mxPoint x="395" y="235" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-
-        <!-- eMBB Forward: RAN -> Rx -->
-        <mxCell id="arr_embb_2" value="&lt;b style=&quot;color:#475569;font-size:10.5px;&quot;&gt;eMBB Flow&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;color:#475569;font-size:9.5px;&quot;&gt;K&lt;sub&gt;bulk&lt;/sub&gt;&lt;/span&gt;" style="edgeStyle=straight;html=1;strokeColor=#64748b;strokeWidth=2.4;align=center;verticalAlign=bottom;labelBackgroundColor=#ffffff;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="715" y="235" as="sourcePoint" />
-            <mxPoint x="780" y="235" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-
-
-        <!-- ========================================== -->
-        <!-- S-NACK RETRANSMISSION PROTOCOL (BOTTOM)    -->
-        <!-- ========================================== -->
-        <mxCell id="snack_banner" value="&lt;div style=&quot;display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; padding:6px 14px; font-family:Helvetica;&quot;&gt;&lt;div style=&quot;color:#991b1b; font-size:12px; font-weight:bold;&quot;&gt;CLOSED-LOOP S-NACK RETRANSMISSION PROTOCOL&lt;/div&gt;&lt;div style=&quot;color:#7f1d1d; font-size:10.5px; margin-top:3px;&quot;&gt;Smart Recovery: Requests only missing high-&amp;gamma;&lt;sub&gt;k&lt;/sub&gt; bands (&amp;Delta;k &amp;approx; 1.2 MB, &amp;Delta;t &amp;approx; 15 ms) &amp;mdash; Avoids 200 MB full retransmission&lt;/div&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef2f2;strokeColor=#fca5a5;strokeWidth=1.3;arcSize=3;overflow=hidden;" vertex="1" parent="1">
-          <mxGeometry x="230" y="318" width="650" height="56" as="geometry" />
-        </mxCell>
-
-        <!-- Return Arrow 1: Downward from card_fail to S-NACK banner -->
-        <mxCell id="arr_snack_down" value="&lt;b style=&quot;color:#b91c1c;font-size:10px;&quot;&gt;Audit Failed&lt;br&gt;(Stroke Erased)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=6;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;strokeWidth=2.2;fontColor=#b91c1c;fontSize=10;fontFamily=Helvetica;align=left;spacingLeft=6;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="937" y="304" as="sourcePoint" />
-            <mxPoint x="880" y="346" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="937" y="346" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-
-        <!-- Return Arrow 2: Left and UP from S-NACK banner to Layer 2 DARDO -->
-        <mxCell id="arr_snack_up" value="&lt;b style=&quot;color:#b91c1c;font-size:10px;&quot;&gt;Targeted S-NACK&lt;br&gt;(Resend Missing &amp;Delta;k)&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;arcSize=6;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#dc2626;strokeWidth=2.2;fontColor=#b91c1c;fontSize=10;fontFamily=Helvetica;align=right;spacingRight=6;endArrow=block;endFill=1;endSize=4;" edge="1" parent="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="230" y="346" as="sourcePoint" />
-            <mxPoint x="172" y="304" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="172" y="346" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-
+        {body}
       </root>
     </mxGraphModel>
   </diagram>
 </mxfile>"""
-    return xml
+
 
 def main():
-    xml = build_spaced_drawio_xml()
-    fig_dir = os.path.abspath('figures')
-    drawio_file = os.path.join(fig_dir, 'fig4_architecture_diagram_io.drawio')
-    with open(drawio_file, 'w', encoding='utf-8') as f:
+    xml = build_xml()
+    fig_dir = os.path.abspath("figures")
+    with open(os.path.join(fig_dir, "fig4_architecture_diagram_io.drawio"), "w", encoding="utf-8") as f:
         f.write(xml)
-    print("Saved wide drawio file:", drawio_file)
+    viewer = "file:///" + os.path.abspath("scratch/viewer-static.min.js").replace("\\", "/")
+    page = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+<script type="text/javascript" src="{viewer}"></script>
+<style>@page {{ size: {W_PAGE}px {H_PAGE}px; margin: 0; }}
+* {{ box-sizing: border-box; }} html, body {{ margin: 0; padding: 0; width: {W_PAGE}px; height: {H_PAGE}px;
+overflow: hidden; background: #ffffff; }} .mxgraph {{ width: {W_PAGE}px; height: {H_PAGE}px; }}</style></head>
+<body><div id="c"></div><script>
+const d = document.createElement('div'); d.className = 'mxgraph';
+d.setAttribute('data-mxgraph', JSON.stringify({{nav: false, resize: false, toolbar: '', border: 0, xml: {json.dumps(xml)}}}));
+document.getElementById('c').appendChild(d); GraphViewer.processElements();
+</script></body></html>"""
+    page = page.replace(f"height: {H_PAGE}px", f"height: {H_PAGE + 80}px")   # room for the viewer's offset
+    html_file = os.path.abspath("scratch/render_fig4.html")
+    with open(html_file, "w", encoding="utf-8") as f:
+        f.write(page)
+    edge = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+    url = "file:///" + html_file.replace("\\", "/")
+    raw = os.path.abspath("scratch/fig4_raw.png")
+    if os.path.exists(raw):
+        os.remove(raw)
+    subprocess.run([edge, "--headless", "--disable-gpu", "--virtual-time-budget=4000",
+                    f"--window-size={W_PAGE},{H_PAGE + 80}", f"--force-device-scale-factor={SCALE}",
+                    f"--screenshot={raw}", url], check=True)
+    import time
+    for _ in range(60):                     # Edge may hand the work to a child process and return early
+        if os.path.exists(raw) and os.path.getsize(raw) > 0:
+            time.sleep(0.5)
+            break
+        time.sleep(0.5)
 
-    viewer_js = os.path.abspath('scratch/viewer-static.min.js').replace('\\\\', '/')
-    html = f"""<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <script type="text/javascript" src="{viewer_js}"></script>
-  <style>
-    * {{ box-sizing: border-box; }}
-    html, body {{
-      margin: 0;
-      padding: 0;
-      width: 1115px;
-      height: 425px;
-      overflow: hidden;
-      background: #ffffff;
-    }}
-    .mxgraph {{
-      width: 1115px;
-      height: 425px;
-      overflow: visible;
-    }}
-  </style>
-</head>
-<body>
-  <div id="container"></div>
-  <script>
-    const xml = {json.dumps(xml)};
-    const div = document.createElement('div');
-    div.className = 'mxgraph';
-    div.setAttribute('data-mxgraph', JSON.stringify({{
-      highlight: '#0000ff',
-      nav: false,
-      resize: true,
-      toolbar: '',
-      xml: xml
-    }}));
-    document.getElementById('container').appendChild(div);
-    GraphViewer.processElements();
-  </script>
-</body>
-</html>"""
+    # crop to the drawn content plus a small even margin
+    pix = fitz.Pixmap(raw)
+    import numpy as np
+    a = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width, pix.n)[..., :3]
+    ink = np.where((a < 245).any(axis=2))
+    pad = 6 * SCALE
+    y0, y1 = max(ink[0].min() - pad, 0), min(ink[0].max() + pad, pix.height)
+    x0, x1 = max(ink[1].min() - pad, 0), min(ink[1].max() + pad, pix.width)
+    src = fitz.open(raw)
+    rect = fitz.Rect(x0, y0, x1, y1) * (src[0].rect.width / pix.width)
+    png = os.path.join(fig_dir, "fig4_architecture.png")
+    clip = src[0].get_pixmap(clip=rect, matrix=fitz.Matrix(pix.width / src[0].rect.width, pix.width / src[0].rect.width))
+    clip.save(png)
+    pdf = os.path.join(fig_dir, "fig4_architecture.pdf")
+    out = fitz.open()
+    w_pt, h_pt = clip.width / SCALE * 0.75, clip.height / SCALE * 0.75   # CSS px -> pt
+    pg = out.new_page(width=w_pt, height=h_pt)
+    pg.insert_image(pg.rect, filename=png)
+    out.save(pdf, deflate=True)
+    print(f"wrote {png} ({clip.width} x {clip.height} px) and {pdf} ({w_pt:.0f} x {h_pt:.0f} pt)")
 
-    html_file = os.path.abspath('scratch/render_fig4_wide.html')
-    with open(html_file, 'w', encoding='utf-8') as f:
-        f.write(html)
-    
-    png_preview = os.path.join(fig_dir, 'fig4_architecture_diagram_io_preview.png')
-    png_final = os.path.join(fig_dir, 'fig4_architecture.png')
-    pdf_out = os.path.join(fig_dir, 'fig4_architecture.pdf')
 
-    edge_path = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-    file_url = 'file:///' + html_file.replace('\\', '/')
-
-    cmd = [
-        edge_path,
-        '--headless',
-        '--disable-gpu',
-        '--force-device-scale-factor=2',
-        '--virtual-time-budget=3000',
-        '--window-size=1115,425',
-        f'--screenshot={png_preview}',
-        file_url
-    ]
-    subprocess.run(cmd, check=True)
-    print("Rendered PNG preview:", png_preview)
-    print("Preview size:", os.path.getsize(png_preview), "bytes")
-
-    # Copy to fig4_architecture.png
-    with open(png_preview, 'rb') as f_in, open(png_final, 'wb') as f_out:
-        f_out.write(f_in.read())
-    print("Updated fig4_architecture.png")
-
-    # Convert to PDF
-    doc = fitz.open()
-    img_doc = fitz.open(png_final)
-    rect = img_doc[0].rect
-    pdf_rect = fitz.Rect(0, 0, rect.width / 2.0, rect.height / 2.0)
-    page = doc.new_page(width=pdf_rect.width, height=pdf_rect.height)
-    page.insert_image(pdf_rect, filename=png_final)
-    doc.save(pdf_out)
-    doc.close()
-    print("Updated fig4_architecture.pdf")
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -189,8 +189,36 @@ def build_xml():
 </mxfile>"""
 
 
+# Muted palette (19 Nov 2026): the Tailwind-bright hues are mapped to desaturated tones that match the paper's other
+# schematics. The URLLC slice is blue, the colour of the priority slice in every results figure; eMBB stays grey.
+MUTED = {
+    # Layer 1, CSA (sky -> slate blue)
+    "#e0f2fe": "#e3ebf2", "#0369a1": "#2e4a66", "#7dd3fc": "#b3c6d8", "#f0f9ff": "#f4f7fa",
+    "#38bdf8": "#b3c6d8", "#0284c7": "#3d6a8f", "#bae6fd": "#c9d6e2",
+    # Layer 2, DARDO (green -> muted teal)
+    "#dcfce7": "#e2eeec", "#15803d": "#2f6a5c", "#86efac": "#b2d1c8", "#f0fdf4": "#f2f7f5",
+    "#4ade80": "#b2d1c8", "#166534": "#2f5f52", "#bbf7d0": "#cadfd8",
+    # Layer 3, URLLC slice (orange -> priority blue)
+    "#ffedd5": "#e3ecf6", "#c2410c": "#2b5a8a", "#fdba74": "#aec5de", "#fff7ed": "#f4f8fc",
+    "#fb923c": "#aec5de", "#ea580c": "#3b6ea5", "#fed7aa": "#c8d8ea",
+    # edge reconstruction (violet -> slate violet)
+    "#ede9fe": "#ebe9f1", "#6d28d9": "#4f4a73", "#c4b5fd": "#c5c1d6", "#f5f3ff": "#f6f5f9",
+    "#7c3aed": "#5a5480", "#ddd6fe": "#d6d3e2",
+    # Layer 4 and the S-NACK loop (red -> muted brick)
+    "#ffe4e6": "#f1e5e5", "#be123c": "#7a3a3a", "#fecdd3": "#dbc1c1", "#fef2f2": "#f8f1f0",
+    "#fca5a5": "#d9b3ae", "#b91c1c": "#8c3a32", "#dc2626": "#a8463d", "#991b1b": "#7d3530",
+    "#7f1d1d": "#6b3330",
+}
+
+
+def recolor(s):
+    for bright, muted in MUTED.items():
+        s = s.replace(bright, muted)
+    return s
+
+
 def main():
-    xml = build_xml()
+    xml = recolor(build_xml())
     fig_dir = os.path.abspath("figures")
     with open(os.path.join(fig_dir, "fig4_architecture_diagram_io.drawio"), "w", encoding="utf-8") as f:
         f.write(xml)
